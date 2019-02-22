@@ -212,7 +212,7 @@ func listenAndServeJsonRpc(port uint16) {
 }
 
 func main() {
-	port := flag.Int("port", 12345, "")
+	port := flag.Int("port", 0, "(required)")
 	flag.Parse()
 
 	if !(*port <= 65535 && *port >= 1) {

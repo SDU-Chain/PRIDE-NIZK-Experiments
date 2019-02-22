@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"flag"
-	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/crypto/bn256"
 	"github.com/ethereum/go-ethereum/mobile"
@@ -27,16 +26,19 @@ func main() {
 	var err error
 
 	//读取设置
-	cloudProviderHost := flag.String("cloud", "localhost:12345", "hostname:port")
+	cloudProviderHost := flag.String("cloud", "localhost:12345", "The cloud server in the form of \"hostname:port\"")
 	ethereumHost := flag.String("ethereum", "http://localhost:8545", "The ethereum client's rpc url.")
-	contractAddress := flag.String("contract", "", "The address of smart contract PRIDE-NIZK. A hex string begin with 0x.")
-	contractAccountIndex := flag.Int("account", 0, "The index of eth.accounts[] ")
+	contractAddress := flag.String("contract", "", "The address of smart contract PRIDE-NIZK. A hex string begin with 0x. (required)")
+	contractAccountIndex := flag.Int("account", 0, "The index of eth.accounts[]. 0 is the first account. (default 0)")
+	loopCount := flag.Int("count", 0, "The count of commitments. (required)")
+
 	flag.Parse()
 
 	if *cloudProviderHost == "" ||
 		*ethereumHost == "" ||
 		*contractAddress == "" ||
-		*contractAccountIndex < 0 {
+		*contractAccountIndex < 0 ||
+		*loopCount <= 0 {
 		flag.Usage()
 		return
 	}
@@ -68,17 +70,35 @@ func main() {
 	EthereumAccount = EthereumAccounts[ContractAccountIndex]
 	log.Println("Use account", EthereumAccount)
 
+	GasLimit, err = ethereumLatestGasLimit()
+	if err != nil {
+		log.Panic(err)
+	}
+	log.Println("Gas limit is", GasLimit)
+
 	err = rpcNewSession(CarID)
 	if err != nil {
 		log.Panic(err)
 	}
+	{
+		transactionHash, err := ethereumNewSession()
+		if err != nil {
+			log.Panic(err)
+		}
 
-	err = ethereumNewSession()
-	if err != nil {
-		log.Panic(err)
+		//等 Transaction 写入区块
+		succeed := false
+		succeed, err = ethereumGetTransactionReceiptLoop(transactionHash)
+		if err != nil {
+			log.Panic(err)
+		}
+		if !succeed {
+			log.Panic("Transaction confirmed. Execution failed.")
+		} else {
+			log.Println("Transaction confirmed. Execution succeed.")
+		}
 	}
-
-	for i := 1; i <= 5; i++ {
+	for i := 1; i <= *loopCount; i++ {
 		v := mathRand.Intn(Constant.HIGH_V + 1)
 		a := mathRand.Intn(Constant.HIGH_A+1) - Constant.HIGH_A/2
 		err = commit(v, a)
@@ -92,11 +112,22 @@ func main() {
 		log.Panic(err)
 	}
 
-	fmt.Println("Cloud sig: " + signature)
-
-	err = ethereumProof()
-	if err != nil {
-		log.Panic(err)
+	//log.Println("Cloud signature: " + signature)
+	{
+		transactionHash, err := ethereumProof(signature)
+		if err != nil {
+			log.Panic(err)
+		}
+		//等 Transaction 写入区块
+		succeed, err := ethereumGetTransactionReceiptLoop(transactionHash)
+		if err != nil {
+			log.Panic(err)
+		}
+		if !succeed {
+			log.Panic("Transaction confirmed. Execution failed.")
+		} else {
+			log.Println("Transaction confirmed. Execution succeed.")
+		}
 	}
 
 }
@@ -153,23 +184,24 @@ func initializeRandomCarID() {
 	CarID = mathRand.Uint64()
 }
 
-func ethereumNewSession() (err error) {
+func ethereumNewSession() (hashHex string, err error) {
 	ret, err := ethereumNewSessionCall(EthereumAccount, ContractAddress)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	fmt.Println("RET:", ret.String())
+	//fmt.Println("RET:", ret.String())
 	if ret.Cmp(big.NewInt(1)) == 0 {
 		log.Println("Start new session on ethereum...")
 	} else {
-		return errors.New("start new session on ethereum failed")
+		return "", errors.New("start new session on ethereum failed")
 	}
 
 	return ethereumNewSessionTransaction(EthereumAccount, ContractAddress)
 }
 
 func commit(v int, a int) error {
+	log.Println("[Commit] v=", v, "a=", a)
 	Timestamp++
 
 	vectorV := Util.IntToVectorV(v)
@@ -203,6 +235,8 @@ var SigmaA [Constant.HIGH_A + 1]big.Int
 
 var PiV bn256.G1 = Util.NewG1IdenticalElement()
 var PiA bn256.G1 = Util.NewG1IdenticalElement()
+
+var GasLimit int64
 
 func updateSigmaV(vectorV [Constant.HIGH_V + 1]big.Int) {
 	for i := 0; i <= Constant.HIGH_V; i++ {
@@ -287,7 +321,7 @@ func rpcSign(carID uint64, piV bn256.G1, piA bn256.G1) (signature string, err er
 	}
 }
 
-func ethereumProof() (err error) {
+func ethereumProof(cloudSignature string) (hashHex string, err error) {
 	var r int64 = int64(mathRand.Int31())
 
 	vGamma := Util.NewG1IdenticalElement()
@@ -309,27 +343,29 @@ func ethereumProof() (err error) {
 		aSigma:   SigmaA,
 	}
 
-	//test
+	////test
 	//fmt.Println("PROOF:")
-	//fmt.Println("vProduct:(", ethereumProof.vProduct[0].String(), ",", ethereumProof.vProduct[1].String(), ")")
-	//fmt.Println("vGamma:(", ethereumProof.vGamma[0].String(), ",", ethereumProof.vGamma[1].String(), ")")
-	//fmt.Println("vY:", ethereumProof.vY[0].String())
-	//fmt.Println("vSigma[0]:", ethereumProof.vSigma[0].String())
-	//fmt.Println("aProduct:(", ethereumProof.aProduct[0].String(), ",", ethereumProof.aProduct[1].String(), ")")
-	//fmt.Println("aGamma:(", ethereumProof.aGamma[0].String(), ",", ethereumProof.aGamma[1].String(), ")")
-	//fmt.Println("aY:", ethereumProof.aY[0].String())
-	//fmt.Println("aSigma[0]:", ethereumProof.aSigma[0].String())
+	//fmt.Println("vProduct:(", proof.vProduct[0].String(), ",", proof.vProduct[1].String(), ")")
+	//fmt.Println("vGamma:(", proof.vGamma[0].String(), ",", proof.vGamma[1].String(), ")")
+	//fmt.Println("vY:", proof.vY[0].String())
+	//fmt.Println("vSigma[0]:", proof.vSigma[0].String())
+	//fmt.Println("vSigma[1]:", proof.vSigma[1].String())
+	//fmt.Println("aProduct:(", proof.aProduct[0].String(), ",", proof.aProduct[1].String(), ")")
+	//fmt.Println("aGamma:(", proof.aGamma[0].String(), ",", proof.aGamma[1].String(), ")")
+	//fmt.Println("aY:", proof.aY[0].String())
+	//fmt.Println("aSigma[0]:", proof.aSigma[0].String())
+	//fmt.Println("aSigma[1]:", proof.aSigma[1].String())
 
 	ret, err := ethereumProofCall(EthereumAccount, ContractAddress, proof)
 	if err != nil {
-		return err
+		return "", err
 	}
-	fmt.Println()
-	fmt.Println("RET:", ret.String())
+	//fmt.Println()
+	//fmt.Println("RET:", ret.String())
 	if ret.Cmp(big.NewInt(1)) == 0 {
 		log.Println("Proof verified.")
 	} else {
-		return errors.New("ethereumProof denied")
+		return "", errors.New("ethereumProof denied")
 	}
 
 	return ethereumProofTransaction(EthereumAccount, ContractAddress, proof)
@@ -436,8 +472,8 @@ func getEthereumParam(accountAddressHex, contractAddressHex string, data []byte)
 	message.SetTo(contractAddress)
 	message.SetData(data)
 	message.SetValue(geth.NewBigInt(0))
-	//Gas 暂时设置为足够多
-	message.SetGas(0xffffffff)
+	//Gas 的值不能高于 block gas limit，也不能低于执行合约需要的 gas
+	message.SetGas(GasLimit)
 
 	return EthereumParam{
 		From:  message.GetFrom().GetHex(),
@@ -448,38 +484,36 @@ func getEthereumParam(accountAddressHex, contractAddressHex string, data []byte)
 	}, nil
 }
 
-func ethereumNewSessionTransaction(accountAddressHex, contractAddressHex string) (err error) {
+func ethereumNewSessionTransaction(accountAddressHex, contractAddressHex string) (hashHex string, err error) {
 	param, err := getNewSessionParam(accountAddressHex, contractAddressHex)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return ethereumSendTransaction(accountAddressHex, contractAddressHex, param)
+	return ethereumSendTransaction(param)
 }
 
-func ethereumProofTransaction(accountAddressHex, contractAddressHex string, proof Proof) (err error) {
+func ethereumProofTransaction(accountAddressHex, contractAddressHex string, proof Proof) (hashHex string, err error) {
 	param, err := getProofParam(accountAddressHex, contractAddressHex, proof)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return ethereumSendTransaction(accountAddressHex, contractAddressHex, param)
+	return ethereumSendTransaction(param)
 }
 
-func ethereumSendTransaction(accountAddressHex, contractAddressHex string, param EthereumParam) (err error) {
-
-	var retHex string
-	err = ethereumRpcCallOnce(&retHex, "eth_sendTransaction", param)
-	fmt.Println("Transaction address: " + retHex)
-	return err
+func ethereumSendTransaction(param EthereumParam) (hashHex string, err error) {
+	err = ethereumRpcCallOnce(&hashHex, "eth_sendTransaction", param)
+	log.Println("Transaction hash: " + hashHex)
+	return hashHex, err
 }
-func ethereumCall(accountAddressHex, contractAddressHex string, param EthereumParam) (ret big.Int, err error) {
+func ethereumCall(param EthereumParam) (ret big.Int, err error) {
 
 	var retHex string
 	err = ethereumRpcCallOnce(&retHex, "eth_call", param, "latest")
 	if err != nil {
 		return ret, err
 	}
-	fmt.Println("Call result: ", retHex)
+	//fmt.Println("Call result: ", retHex)
 	//base 必须设置成 0 而不是 16，否则 0x 可能被忽略
 	ret.SetString(retHex, 0)
 	//fmt.Println("RECV INT:", ret.String())
@@ -492,7 +526,7 @@ func ethereumProofCall(accountAddressHex, contractAddressHex string, proof Proof
 	if err != nil {
 		return *new(big.Int), err
 	}
-	return ethereumCall(accountAddressHex, contractAddressHex, param)
+	return ethereumCall(param)
 }
 
 func ethereumNewSessionCall(accountAddressHex, contractAddressHex string) (ret big.Int, err error) {
@@ -500,7 +534,7 @@ func ethereumNewSessionCall(accountAddressHex, contractAddressHex string) (ret b
 	if err != nil {
 		return *new(big.Int), err
 	}
-	return ethereumCall(accountAddressHex, contractAddressHex, param)
+	return ethereumCall(param)
 }
 
 func ethereumRpcCallOnce(result interface{}, method string, args ...interface{}) error {
@@ -508,7 +542,7 @@ func ethereumRpcCallOnce(result interface{}, method string, args ...interface{})
 	duration, _ := time.ParseDuration("5s")
 	ctx, _ := context.WithTimeout(context.Background(), duration)
 
-	err := EthereumClient.CallContext(ctx, result, method, args...)
+	err := EthereumClient.CallContext(ctx, &result, method, args...)
 	if err == nil {
 		log.Println("<RPC> \"" + method + "\" sent.")
 	} else {
@@ -520,4 +554,32 @@ func ethereumRpcCallOnce(result interface{}, method string, args ...interface{})
 func ethereumEthAccounts() (ret []string, err error) {
 	err = ethereumRpcCallOnce(&ret, "eth_accounts")
 	return ret, err
+}
+
+func ethereumLatestGasLimit() (ret int64, err error) {
+	var output map[string]interface{}
+	err = ethereumRpcCallOnce(&output, "eth_getBlockByNumber", "latest", true)
+	if err != nil {
+		return 0, err
+	}
+	//fmt.Println(output["gasLimit"])
+	var t big.Int
+	//必须是 0，不能是 16
+	t.SetString(output["gasLimit"].(string), 0)
+	return t.Int64(), nil
+}
+func ethereumGetTransactionReceiptLoop(hashHex string) (status bool, err error) {
+	var output map[string]interface{}
+	for output == nil {
+		time.Sleep(time.Duration(1) * time.Second)
+		err = ethereumRpcCallOnce(&output, "eth_getTransactionReceipt", hashHex)
+		if err != nil {
+			return false, err
+		}
+	}
+	var t big.Int
+	//必须是 0，不能是 16
+	t.SetString(output["status"].(string), 0)
+
+	return t.Cmp(big.NewInt(1)) == 0, nil
 }
