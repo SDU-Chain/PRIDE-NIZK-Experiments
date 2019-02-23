@@ -472,8 +472,8 @@ func getEthereumParam(accountAddressHex, contractAddressHex string, data []byte)
 	message.SetTo(contractAddress)
 	message.SetData(data)
 	message.SetValue(geth.NewBigInt(0))
-	//Gas 的值不能高于 block gas limit，也不能低于执行合约需要的 gas
-	message.SetGas(GasLimit)
+	//Gas 的值不能高于 block gas limit，也不能低于执行合约需要的 gas。注意 gasLimit 是会动态变化的。
+	message.SetGas(GasLimit / 2)
 
 	return EthereumParam{
 		From:  message.GetFrom().GetHex(),
