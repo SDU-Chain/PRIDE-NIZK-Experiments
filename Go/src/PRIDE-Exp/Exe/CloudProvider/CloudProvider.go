@@ -4,6 +4,7 @@ import (
 	"PRIDE-Exp/Util"
 	"PRIDE-Exp/UtilShit"
 	"crypto/ecdsa"
+	"crypto/elliptic"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
@@ -21,8 +22,11 @@ import (
 var CloudPrivateKey ecdsa.PrivateKey
 
 func init() {
-	privKey_D := UtilShit.BigFromBase10("15348264571704288920493519401114898995244869295807642822501527776533288611421")
-	privKey := ecdsa.PrivateKey{D: &privKey_D,}
+	pubKey_X := UtilShit.BigFromBase10("232583368689106491135354340812778073797275697854184309648022570060710624054")
+	pubKey_Y := UtilShit.BigFromBase10("77766008452846797846870473493624644636346852359224227868753898928658033671653")
+	pubKey := ecdsa.PublicKey{X: &pubKey_X, Y: &pubKey_Y, Curve: elliptic.P256()}
+	privKey_D := UtilShit.BigFromBase10("55157474387159296051514955377571592855600728999084381833947749325300176604198")
+	privKey := ecdsa.PrivateKey{D: &privKey_D, PublicKey: pubKey}
 	CloudPrivateKey = privKey
 }
 
@@ -194,11 +198,14 @@ func (this *Cloud) Sign(arg Util.RpcSignArgument, res *Util.RpcSignResponse) (er
 
 	//SHA256 Hash
 	argMessageHash := sha256.Sum256([]byte(fmt.Sprint(arg.CarID) + fmt.Sprint(arg.PiV) + fmt.Sprint(arg.PiA)))
+
 	//Sign here
 	sig, err := ethereumCrypto.Sign(argMessageHash[:], &CloudPrivateKey)
+
 	if err != nil {
 		return err
 	}
+	
 	res.Signature = hex.EncodeToString(sig)
 
 	log.Println("[Sign] " + res.Signature)
