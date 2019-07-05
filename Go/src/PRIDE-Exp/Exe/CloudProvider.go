@@ -2,16 +2,26 @@ package main
 
 import (
 	"PRIDE-Exp/Util"
+	"PRIDE-Exp/UtilShit"
+	"crypto/ecdsa"
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/ethereum/go-ethereum/crypto/bn256"
+	"geth-timing/crypto/bn256/google"
 	"log"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
 	"time"
 )
+
+var CloudPrivateKey ecdsa.PrivateKey
+
+func init() {
+	privKey_D := UtilShit.BigFromBase10("15348264571704288920493519401114898995244869295807642822501527776533288611421")
+	privKey := ecdsa.PrivateKey{D: &privKey_D,}
+	CloudPrivateKey = privKey
+}
 
 type Commitment struct {
 	TildeV    bn256.G1

@@ -7,7 +7,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
-	"github.com/ethereum/go-ethereum/crypto/bn256"
+	"geth-timing/crypto/bn256/google"
 	"math/big"
 	mathRand "math/rand"
 )
