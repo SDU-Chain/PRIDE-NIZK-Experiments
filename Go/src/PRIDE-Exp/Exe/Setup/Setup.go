@@ -1,4 +1,4 @@
-package Setup
+package main
 
 import (
 	"PRIDE-Exp/Constant"

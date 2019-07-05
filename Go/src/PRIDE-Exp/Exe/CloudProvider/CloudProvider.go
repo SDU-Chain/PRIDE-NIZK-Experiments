@@ -1,4 +1,4 @@
-package CloudProvider
+package main
 
 import (
 	"PRIDE-Exp/Util"
