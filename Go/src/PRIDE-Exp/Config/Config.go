@@ -4,6 +4,7 @@ import (
 	"PRIDE-Exp/Constant"
 	"PRIDE-Exp/UtilShit"
 	"crypto/ecdsa"
+	"crypto/elliptic"
 	"encoding/hex"
 	"geth-timing/crypto/bn256/google"
 )
@@ -185,9 +186,10 @@ func init() {
 	yBytes, _ = hex.DecodeString("168c950e8f165bc89100ed0a66018cd0a9211be2be14520174cece9360bdc94a")
 	_, _ = G[56].Unmarshal(append(xBytes[:], yBytes[:]...))
 
-	pubKey_X := UtilShit.BigFromBase10("100459700991507526446471132097622324736852194123279933079831407461761469755833")
-	pubKey_Y := UtilShit.BigFromBase10("52990389698519120846254503290734415891276833013758058315469734465350888948372")
-	pubKey := ecdsa.PublicKey{X: &pubKey_X, Y: &pubKey_Y,}
+	pubKey_X := UtilShit.BigFromBase10("2623568935787451405037865878459684953003619708141746007529530310810218900110")
+	pubKey_Y := UtilShit.BigFromBase10("99869082449588321067599440947213666390230365096246108395840275302720400059636")
+	pubKey := ecdsa.PublicKey{X: &pubKey_X, Y: &pubKey_Y, Curve: elliptic.P256()}
+
 	CloudPublicKey = pubKey
 }
 

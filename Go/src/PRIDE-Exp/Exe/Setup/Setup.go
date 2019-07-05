@@ -64,11 +64,12 @@ func generateCloudSig() (err error) {
 
 	publicKey := privateKey.PublicKey
 
-	fmt.Println("privKey_D := UtilShit.BigFromBase10(\"" + fmt.Sprint(privateKey.D) + "\")")
-	fmt.Println("privKey := ecdsa.PrivateKey{D: &privKey_D,}")
 	fmt.Println("pubKey_X := UtilShit.BigFromBase10(\"" + fmt.Sprint(publicKey.X) + "\")")
 	fmt.Println("pubKey_Y := UtilShit.BigFromBase10(\"" + fmt.Sprint(publicKey.Y) + "\")")
-	fmt.Println("pubKey := ecdsa.PublicKey{X: &pubKey_X,Y: &pubKey_Y,}")
+	fmt.Println("pubKey := ecdsa.PublicKey{X: &pubKey_X, Y: &pubKey_Y, Curve: elliptic.P256()}")
+
+	fmt.Println("privKey_D := UtilShit.BigFromBase10(\"" + fmt.Sprint(privateKey.D) + "\")")
+	fmt.Println("privKey := ecdsa.PrivateKey{D: &privKey_D, PublicKey: pubKey}")
 
 	fmt.Println("-----------------------")
 	return nil
