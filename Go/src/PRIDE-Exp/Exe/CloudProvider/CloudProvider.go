@@ -4,9 +4,12 @@ import (
 	"PRIDE-Exp/Util"
 	"PRIDE-Exp/UtilShit"
 	"crypto/ecdsa"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
+	ethereumCrypto "geth-timing/crypto"
 	"geth-timing/crypto/bn256/google"
 	"log"
 	"net"
@@ -189,8 +192,14 @@ func (this *Cloud) Sign(arg Util.RpcSignArgument, res *Util.RpcSignResponse) (er
 		return errors.New("PiA is not equal")
 	}
 
-	//用 OK 代替真的签名，因为这不是重点
-	res.Signature = "OK"
+	//SHA256 Hash
+	argMessageHash := sha256.Sum256([]byte(fmt.Sprint(arg.CarID) + fmt.Sprint(arg.PiV) + fmt.Sprint(arg.PiA)))
+	//Sign here
+	sig, err := ethereumCrypto.Sign(argMessageHash[:], &CloudPrivateKey)
+	if err != nil {
+		return err
+	}
+	res.Signature = hex.EncodeToString(sig)
 
 	log.Println("[Sign] " + res.Signature)
 
