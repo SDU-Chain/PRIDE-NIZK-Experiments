@@ -1,6 +1,3 @@
-[submodule "Go/go-ethereum-timing"]
-	path = Go/go-ethereum-timing
-	url = https://github.com/SadPencil/geth-timing.git
 [submodule "Go/src/geth-timing"]
 	path = Go/src/geth-timing
 	url = https://github.com/SadPencil/geth-timing
