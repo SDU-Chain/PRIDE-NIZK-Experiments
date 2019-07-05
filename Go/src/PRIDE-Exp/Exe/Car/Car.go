@@ -1,4 +1,4 @@
-package main
+package Car
 
 import (
 	"PRIDE-Exp/Config"
