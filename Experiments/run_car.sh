@@ -10,7 +10,7 @@ set -e
 read -p "Number of commitments per car=?" count
 
 # run cars one by one
-for i in {1..10}
+for i in {1..1}
 do
 ./bin/car -count=$count -contract $contract -cloud localhost:12345;
 done

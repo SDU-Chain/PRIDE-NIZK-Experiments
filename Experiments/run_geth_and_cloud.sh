@@ -6,8 +6,7 @@ account=`cat ./config/account`
 # stop when error occurs
 set -e
 
-# the number of commitments commited by a car 
-read -p "Number of commitments per car=?" count
+read -p "Output filename=?" count
 
 # kill server process
 screen -S pride_exp_geth -X quit >/dev/null 2>&1 || true

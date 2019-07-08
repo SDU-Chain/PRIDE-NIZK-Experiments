@@ -26,7 +26,7 @@ screen -Sdm pride_exp_geth ./bin/geth-timing --timing.output=./output/$count.txt
 sleep 8
 
 # run cars one by one
-for i in {1..10}
+for i in {1..1}
 do
 ./bin/car -count=$count -contract $contract -cloud localhost:12345;
 done
