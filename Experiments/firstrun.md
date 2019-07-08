@@ -16,8 +16,8 @@ Step 3: Deploy the contract. Write down the contract address.
 
 Step 4: Close the node
 
-Step 5: Modify the line 4 in `run.sh` with the valid contract address.
+Step 5: Modify `./config/contract` with the valid contract address, e.g.:
 
-    contract="0x5E619911b8358861992365EDB67f51ffBC531618"
+    0x5E619911b8358861992365EDB67f51ffBC531618
 
 Step 6: Execute `run.sh` to run the experiments
