@@ -1,4 +1,8 @@
 ## Step 0: Prepare files
+  Make sure the following commands are available.
+  
+  	bash python3 screen curl go gcc make
+
   Compile and put the executables in the bin folder as follows.
 
 	./bin/car
