@@ -27,8 +27,9 @@
 	chmod +x ./*.py
 
 ## Step 1: Prepare accounts
-  The sealer account is already created with address b3270be37a758e67a67fc6f2b62247cc58e0e61f. The corresponding private key is placed at ./gethdata/keystore as well as ./gethaccount/sealer/keystore.
-  Execute the following command to create 1000 car accounts. 
+  The sealer account is already created. The address is placed at `./config/address`. The corresponding private key is placed at `./gethdata/keystore/` as well as `./gethaccount/sealer/keystore/`.
+  
+  However car accounts are not pre-created. Execute the following command to create 1000 car accounts. 
 
 	echo 1000 | ./make_accounts.sh
 
@@ -54,7 +55,7 @@
   The script also start the cloud provider.
 
 ## Step 6: Get the enode of the sealer node
-  Note, if you just started ethereum client, please wait a few seconds for the client to prepare the RPC protocol. It might take ~10s.
+  Note that if you just started ethereum client, please wait a few seconds for the client to prepare the RPC protocol. It might take ~10s.
 
 	./get_geth_enode.sh
 
