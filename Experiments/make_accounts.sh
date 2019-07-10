@@ -1,12 +1,20 @@
 #!/bin/bash
 set -e
 
+read -p "How many car accounts do you want to generate? " count
+
 rm -rf ./gethaccounts/cars/*||true
-for i in {1..1000}
+
+START=1
+END=$count
+
+i=$START
+while [[ $i -le $END ]]
 do
-	printf '\r'
-	echo -n "($i/1000)"
+	echo -n "($i/$END)"
 	mkdir -p ./gethaccounts/cars/$i
-	./bin/geth-timing --datadir ./gethaccounts/cars/$i --password ./password/password.txt account new > /dev/null 2>&1;
+	./bin/geth-timing --datadir ./gethaccounts/cars/$i --password ./password/password.txt account new > /dev/null 2>&1
+	((i = i + 1))
+	printf '\r'
 done
 

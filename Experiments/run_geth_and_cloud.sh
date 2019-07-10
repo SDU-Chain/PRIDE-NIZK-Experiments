@@ -6,15 +6,12 @@ account=`cat ./config/account`
 # stop when error occurs
 set -e
 
-read -p "Output filename=?" count
+read -p "Output filename=?" filename
 
-# kill server process
-screen -S pride_exp_geth -X quit >/dev/null 2>&1 || true
-screen -S pride_exp_cloud -X quit >/dev/null 2>&1 || true
-killall geth-timing >/dev/null 2>&1 || true
-killall cloudProvider >/dev/null 2>&1 || true
+# kill server process gently
+./kill_geth_and_cloud.sh
 
 # run server at background
 screen -Sdm pride_exp_cloud ./bin/cloudProvider -port 12345
-screen -Sdm pride_exp_geth ./bin/geth-timing --timing.output=./output/$count.txt --datadir ./gethdata --networkid 1114 --targetgaslimit 75200240 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --rpcapi "db,eth,net,web3,miner,personal" --nodiscover --mine --minerthreads 1 --unlock $account --password ./password/password.txt
+screen -Sdm pride_exp_geth ./bin/geth-timing --timing.output=./output/$filename.txt --datadir ./gethdata --networkid 1114 --targetgaslimit 75200240 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,db,eth,net,web3,miner,personal" --nodiscover --mine --minerthreads 1 --unlock $account --password ./password/password.txt
 

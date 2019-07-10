@@ -4,10 +4,9 @@
 	./bin/car
 	./bin/cloudProvider
 	./bin/geth-timing
-	./bin/bootnode
+
   The following scripts might be handy.
 
-	./compile_bootnode.sh
 	./compile_car_and_cloud.sh
 	./compile_geth.sh
 
@@ -21,7 +20,7 @@
   The sealer account is already created with address b3270be37a758e67a67fc6f2b62247cc58e0e61f. The corresponding private key is placed at ./gethdata/keystore as well as ./gethaccount/sealer/keystore.
   Execute the following command to create 1000 car accounts. 
 
-	./make_accounts.sh
+	echo 1000 | ./make_accounts.sh
 
 ## Step 2: Fund accounts
   The car accounts are not sealers, i.e. they can't mine (vote) to produce ether. The easiest way is to pre-fund them at the genesis block. It's advised to write a smart contract to fund new accounts in prodution, but we omit it because it is just an experiment.
@@ -37,6 +36,6 @@
 
 	./deploy_contract.sh
 
-## Step 5: Start the boot node
+## Step 5: Start the sealer node
 
 To be continued.
