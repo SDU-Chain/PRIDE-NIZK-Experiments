@@ -19,7 +19,7 @@ echo "sleep 8s..."
 sleep 8
 
 # run cars one by one
-echo $count | ./run_car.sh
+echo $count | ./run_car_emulator.sh
 
 sleep 1
 

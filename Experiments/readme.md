@@ -36,6 +36,18 @@
 
 	./deploy_contract.sh
 
-## Step 5: Start the sealer node
+## Step 5: Start the sealer node and the cloud provider
+  Start the geth client as the sealer node, and output the timing log to ./output/foobar.txt.
+
+	echo foobar | ./run_geth_and_cloud.sh
+
+  The script also start the cloud provider.
+
+## Step 6: Get the enode of the sealer node
+  Note, if you just started ethereum client, please wait a few seconds for the client to prepare the RPC protocol. It might take ~10s.
+
+	./get_geth_enode.sh
+
+## Step 7: Start a car node
 
 To be continued.
