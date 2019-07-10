@@ -48,7 +48,7 @@
 	./deploy_contract.sh
 
 ## Step 5: Start the sealer node and the cloud provider
-  Start the geth client as the sealer node, and output the timing log to ./output/foobar.txt.
+  Start the geth client as the sealer node, and output the timing log to `./output/foobar.txt`.
 
 	echo foobar | ./run_geth_and_cloud.sh
 
