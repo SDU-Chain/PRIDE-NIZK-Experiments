@@ -1,5 +1,7 @@
 # Experiments of PRIDE-NIZK
 
+[Experiments](https://github.com/SadPencil/PRIDE-NIZK-Experiments/blob/master/Experiments/readme.md)
+
 ## Copyright
 Copyright © 2018-2019 Sad Pencil &lt;me@pencil.live&gt;
 
