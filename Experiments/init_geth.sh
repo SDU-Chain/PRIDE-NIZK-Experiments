@@ -5,5 +5,5 @@ pushd ./gethdata
 rm geth.ipc || true
 rm -rf geth/ || true
 popd
-./bin/geth-timing --datadir ./gethdata init ./private.json
+./bin/geth-timing --datadir ./gethdata init ./genesis.json
 

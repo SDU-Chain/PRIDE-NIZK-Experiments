@@ -1,23 +1,42 @@
-Step 0: Compile and put the executables in the bin folder as follows.
+## Step 0: Prepare files
+  Compile and put the executables in the bin folder as follows.
 
 	./bin/car
 	./bin/cloudProvider
 	./bin/geth-timing
+	./bin/bootnode
+  The following scripts might be handy.
 
-Step 1: Initialize a private ethereum network
+	./compile_bootnode.sh
+	./compile_car_and_cloud.sh
+	./compile_geth.sh
 
-    ./bin/geth-timing --datadir ./gethdata init ./private.json
+  If for some reasons the x-permission is lost, grant the x-permission on executables.
 
-Step 2: Run the node
+	chmod +x ./bin/*
+	chmod +x ./*.sh
+	chmod +x ./*.py
 
-    ./bin/geth-timing --datadir ./gethdata --timing.output=./output/deleteme.txt --networkid 1114 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --rpcapi "db,eth,net,web3,miner,personal" --nodiscover --mine --minerthreads 1 --unlock b3270be37a758e67a67fc6f2b62247cc58e0e61f --password ./password/password.txt
+## Step 1: Prepare accounts
+  The sealer account is already created with address b3270be37a758e67a67fc6f2b62247cc58e0e61f. The corresponding private key is placed at ./gethdata/keystore as well as ./gethaccount/sealer/keystore.
+  Execute the following command to create 1000 car accounts. 
 
-Step 3: Deploy the contract. Write down the contract address.
+	./make_accounts.sh
 
-Step 4: Close the node
+## Step 2: Fund accounts
+  The car accounts are not sealers, i.e. they can't mine (vote) to produce ether. The easiest way is to pre-fund them at the genesis block. It's advised to write a smart contract to fund new accounts in prodution, but we omit it because it is just an experiment.
 
-Step 5: Modify `./config/contract` with the valid contract address, e.g.:
+	./make_genesis.py
 
-    0x5E619911b8358861992365EDB67f51ffBC531618
+## Step 3: Initialize the blockchain
 
-Step 6: Execute `run.sh` to run the experiments
+	./init_geth.sh
+
+## Step 4: Deploy the smart contract
+  Note that the following script is written ONLY for truffle 5.0 and is not promised to be working in the future. If the script is not working, it's advised to write a program that send the RPC message `eth_sendTransaction` to deploy the contract as well as get the corresponding address, which should be write to `./config/contract`.
+
+	./deploy_contract.sh
+
+## Step 5: Start the boot node
+
+To be continued.
