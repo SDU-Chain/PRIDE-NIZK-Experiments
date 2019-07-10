@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 pushd ./output
-rm *.txt
+rm *.txt|true
 popd
