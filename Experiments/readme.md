@@ -8,11 +8,12 @@
   	apt install build-essential golang-go npm nodejs screen curl python3 bash
 	npm -g install truffle
 
-  Compile and put the executables in the bin folder as follows.
+  Compile and put the executables in the bin folder as follows. 
 
-	./bin/car
-	./bin/cloudProvider
-	./bin/geth-timing
+	# Put the executables as follows:
+	# ./bin/car
+	# ./bin/cloudProvider
+	# ./bin/geth-timing
 
   The following scripts might be handy.
 
