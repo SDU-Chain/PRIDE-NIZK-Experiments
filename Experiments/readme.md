@@ -1,7 +1,12 @@
 ## Step 0: Prepare files
   Make sure the following commands are available.
   
-  	bash python3 screen curl go gcc make
+  	bash python3 screen curl go gcc make truffle
+  
+  For example, on Ubuntu 18.04, you may install missing packages through apt-get.
+  
+  	apt install build-essential golang-go npm nodejs screen curl python3 bash
+	npm -g install truffle
 
   Compile and put the executables in the bin folder as follows.
 
