@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # fund all the cars
     for car_addr in car_addresses:
-        genesis['alloc'][car_addr] = {"balance": "0x1234567890"}
+        genesis['alloc'][car_addr] = {"balance": "0x100000000000000000000000000000000000000000000000000000000000000"}
 
     # output
     with open('./genesis.json', 'w') as f:
