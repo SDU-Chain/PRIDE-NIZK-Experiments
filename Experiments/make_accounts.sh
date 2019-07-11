@@ -22,4 +22,5 @@ done
 
 echo "Creating tar archive..."
 mkdir -p ./http/gethaccounts
-tar -zcf ./http/gethaccounts/cars.tar.gz ./gethaccounts/cars
+cd ./gethaccounts
+tar -zcf ../http/gethaccounts/cars.tar.gz cars

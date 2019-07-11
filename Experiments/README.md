@@ -1,11 +1,11 @@
 ## Step 0: Prepare files
   Make sure the following commands are available.
   
-  	bash python3 screen curl go gcc make truffle
+  	bash python3 screen curl wget go gcc make truffle tar
   
   For example, on Ubuntu 18.04, you may install missing packages through apt-get.
   
-  	apt install build-essential golang-go npm nodejs screen curl python3 bash
+  	apt install build-essential golang-go npm nodejs screen curl wget python3 bash tar
 	npm -g install truffle
 
   Compile and put the executables in the bin folder as follows. 
@@ -34,7 +34,7 @@
 	echo 1000 | ./make_accounts.sh
 
 ## Step 2: Fund accounts
-  The car accounts are not sealers, i.e. they can't mine (vote) to produce ether. The easiest way is to pre-fund them at the genesis block. It's advised to write a smart contract to fund new accounts in prodution, but we omit it because it is just an experiment.
+  The car accounts are not sealers, i.e. they can't mine (vote) to produce ether. The easiest way is to pre-fund them at the genesis block. It's advised to write a smart contract to fund new accounts for prodution use, but we omit it because it is just an experiment.
 
 	./make_genesis.py
 
