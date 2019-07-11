@@ -48,9 +48,14 @@
 	./init_server_geth_and_deploy_contract.sh
 
 ## Step 4: [Server side] Start the sealer node and the cloud provider
+
+  Find your ip address and write to `./config/bootnode_ip`.
+
+	echo 192.168.1.1 > ./config/bootnode_ip
+
   Start the geth client as the sealer node, and output the timing log to `./output/foobar.txt`.
 
-	echo foobar | ./run_geth_and_cloud.sh
+	echo foobar | ./run_server_geth_and_cloud.sh
 
   The script also start the cloud provider.
 
