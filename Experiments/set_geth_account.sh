@@ -17,6 +17,6 @@ echo $account > ./config/account
 echo "Account: $account"
 
 rm -rf "./gethdata/*" || true
-cp -r "$account_dir" "./gethdata"
+cp -r "$account_dir/keystore" "./gethdata"
 
 ./init_geth.sh
