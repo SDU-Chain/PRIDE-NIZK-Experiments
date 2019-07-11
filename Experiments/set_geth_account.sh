@@ -16,7 +16,7 @@ account=`cat "$account_dir/keystore/"* | head -n 1 | ./parse_json.py \"address\"
 echo $account > ./config/account
 echo "Account: $account"
 
-rm -rf "./gethdata/*" || true
+rm -rf ./gethdata/* || true
 cp -r "$account_dir/keystore" "./gethdata"
 
 ./init_geth.sh
