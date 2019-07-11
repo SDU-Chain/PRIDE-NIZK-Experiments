@@ -39,9 +39,6 @@
 	./make_genesis.py
 
 ## Step 3: [Server side] Initialize the blockchain and deploy the smart contract
-  Set the account to the server account.
-
-	echo 0 | ./set_geth_account.sh
 
   Note that the following script is written ONLY for truffle 5.0 and is not promised to be working in the future. If the script is not working, it's advised to write a program that send the RPC message `eth_sendTransaction` to deploy the contract as well as get the corresponding address, which should be write to `./config/contract`.
 

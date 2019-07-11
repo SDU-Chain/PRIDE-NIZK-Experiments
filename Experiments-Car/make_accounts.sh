@@ -14,7 +14,7 @@ do
 	echo -n "($i/$END)"
 	mkdir -p ./gethaccounts/cars/$i
 	./bin/geth-timing --datadir ./gethaccounts/cars/$i --password ./password/password.txt account new > /dev/null 2>&1
-	printf '\r'
 	((i = i + 1))
+	printf '\r'
 done
 
