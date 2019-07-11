@@ -8,6 +8,8 @@ rm -rf ./gethaccounts/cars/*||true
 START=1
 END=$count
 
+echo "Generating $count car accounts..."
+
 i=$START
 while [[ $i -le $END ]]
 do
@@ -18,3 +20,6 @@ do
 	((i = i + 1))
 done
 
+echo "Creating tar archive..."
+mkdir -p ./http/gethaccounts
+tar -zcf ./http/gethaccounts/cars.tar.gz ./gethaccounts/cars
