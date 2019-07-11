@@ -38,27 +38,24 @@
 
 	./make_genesis.py
 
-## Step 3: Initialize the blockchain
+## Step 3: [Server side] Initialize the blockchain and deploy the smart contract
 
-	./init_geth.sh
-
-## Step 4: Deploy the smart contract
   Note that the following script is written ONLY for truffle 5.0 and is not promised to be working in the future. If the script is not working, it's advised to write a program that send the RPC message `eth_sendTransaction` to deploy the contract as well as get the corresponding address, which should be write to `./config/contract`.
 
-	./deploy_contract.sh
+	./init_server_geth_and_deploy_contract.sh
 
-## Step 5: Start the sealer node and the cloud provider
+## Step 4: [Server side] Start the sealer node and the cloud provider
   Start the geth client as the sealer node, and output the timing log to `./output/foobar.txt`.
 
 	echo foobar | ./run_geth_and_cloud.sh
 
   The script also start the cloud provider.
 
-## Step 6: Get the enode of the sealer node
+## Step 5: [Server side] Get the enode of the sealer node
   Note that if you just started ethereum client, please wait a few seconds for the client to prepare the RPC protocol. It might take ~10s.
 
 	./get_geth_enode.sh
 
-## Step 7: Start a car node
+## Step 6: Start a car node
 
 To be continued.
