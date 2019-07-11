@@ -26,14 +26,14 @@
 	chmod +x ./*.sh
 	chmod +x ./*.py
 
-## Step 1: Prepare accounts
-  The sealer account is already created. The address is placed at `./config/address`. The corresponding private key is placed at `./gethdata/keystore/` as well as `./gethaccount/sealer/keystore/`.
+## Step 1: [Server side] Prepare accounts
+  The sealer account is already created. The address is placed at `./config/address`. The corresponding private key is placed at `./gethaccount/sealer/keystore/`.
   
   However car accounts are not pre-created. Execute the following command to create 1000 car accounts. 
 
 	echo 1000 | ./make_accounts.sh
 
-## Step 2: Fund accounts
+## Step 2: [Server side] Fund accounts
   The car accounts are not sealers, i.e. they can't mine (vote) to produce ether. The easiest way is to pre-fund them at the genesis block. It's advised to write a smart contract to fund new accounts for prodution use, but we omit it because it is just an experiment.
 
 	./make_genesis.py
@@ -62,7 +62,7 @@
 ## Step 5: [Server side] Get the enode of the sealer node
   Note that if you just started ethereum client, please wait a few seconds for the client to prepare the RPC protocol. It might take ~10s.
 
-	./get_geth_enode.sh
+	./update_geth_enode_config.sh
 
 ## Step 6: Start a car node
 
