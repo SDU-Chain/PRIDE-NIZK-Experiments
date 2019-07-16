@@ -18,7 +18,6 @@ row_number_of_commitments = sheet.col_values(0)
 row_data_first_4_bytes = sheet.col_values(2)
 row_transaction_execution_times = sheet.col_values(5)
 row_transaction_latency_times = sheet.col_values(8)
-boxPlotData = []
 
 group_transaction_execution_times = dict()
 group_transaction_latency_times = dict()
@@ -42,6 +41,7 @@ for i in range(0, len(row_number_of_commitments)):
         else:
             group_transaction_latency_times[v] = [int(row_transaction_latency_times[i]) / 1000000]
 
+boxPlotData = []
 # 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
 for k in group_transaction_execution_times.keys():
     boxPlotData.append(group_transaction_execution_times[k])
@@ -71,7 +71,8 @@ fig.savefig("graph-1.pdf", bbox_inches="tight")
 
 boxPlotData = []
 # 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
-for k in group_transaction_latency_times.keys():
+# 所以加个排序保险一点
+for k in sorted(group_transaction_latency_times.keys()):
     boxPlotData.append(group_transaction_latency_times[k])
 
 print(boxPlotData)
@@ -86,11 +87,11 @@ plt.boxplot(x=boxPlotData,
             medianprops={'linestyle': '-', 'color': 'blue', 'linewidth': 1.5},
             whiskerprops={'linewidth': 1.5},
             capprops={'linewidth': 1.5},
-            labels=group_transaction_latency_times.keys())
+            labels=sorted(group_transaction_latency_times.keys()))
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel('VerProof (ms)', fontsize=32, color='black', labelpad=20)
+plt.ylabel('Latency (ms)', fontsize=32, color='black', labelpad=20)
 plt.xticks(fontsize=32, color='black')
 plt.yticks(fontsize=32, color='black')
 plt.show()
