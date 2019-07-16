@@ -76,7 +76,7 @@ func genProof() {
 	fmt.Println(proof)
 	fmt.Println()
 
-	fmt.Print(duration.Nanoseconds(), "ns")
+	fmt.Println("genproof:", duration.Nanoseconds(), "ns")
 }
 
 func commit(v int, a int) {
@@ -109,11 +109,15 @@ func main() {
 		flag.Usage()
 		return
 	}
+	start := time.Now()
 	for i := 1; i <= *loopCount; i++ {
 		v := mathRand.Intn(Constant.HIGH_V + 1)
 		a := mathRand.Intn(Constant.HIGH_A+1) - Constant.HIGH_A/2
 		commit(v, a)
-
 	}
+	end := time.Now()
+	duration := end.Sub(start)
+
 	genProof()
+	fmt.Println("commit:", duration.Nanoseconds()/(int64)(*loopCount), "ns")
 }
