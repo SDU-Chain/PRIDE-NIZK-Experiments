@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"strconv"
 )
 
 func main() {
@@ -27,8 +26,7 @@ func main() {
 	}
 
 	if len(*outputFileName) >= 5 {
-		if (*outputFileName)[len(*outputFileName)-5:] == ".xlsx" {
-		} else {
+		if (*outputFileName)[len(*outputFileName)-5:] != ".xlsx" {
 			*outputFileName += ".xlsx"
 		}
 	} else {
@@ -51,6 +49,27 @@ func main() {
 		panic(err)
 	}
 
+	row = sheet.AddRow()
+	cell = row.AddCell()
+	cell.SetString("filename")
+	cell = row.AddCell()
+	cell.SetString("TransactionHash")
+	cell = row.AddCell()
+	cell.SetString("DataFirst4Byte")
+	cell = row.AddCell()
+	cell.SetString("TransactionBegin")
+	cell = row.AddCell()
+	cell.SetString("TransactionEnd")
+	cell = row.AddCell()
+	cell = row.AddCell()
+	cell.SetString("NewTransaction")
+	cell = row.AddCell()
+	cell.SetString("BlockGen")
+	cell = row.AddCell()
+
+	var json_list []map[string]interface{}
+	json_list = make([]map[string]interface{}, 0)
+
 	for _, fi := range rd {
 		name := fi.Name()
 		if len(name) >= 4 {
@@ -64,29 +83,105 @@ func main() {
 
 				scanner := bufio.NewScanner(file)
 				for scanner.Scan() {
-					var j struct {
-						From              string
-						To                string
-						TimeCost          int64
-						Timestamp         int64
-						DataFirst4ByteHex string
-					}
-					err = json.Unmarshal([]byte(scanner.Text()), &j)
+					var obj map[string]interface{}
+					err = json.Unmarshal([]byte(scanner.Text()), &obj)
 					if err != nil {
 
 					} else {
-						if j.DataFirst4ByteHex == "98d69d92" {
-							row = sheet.AddRow()
-							cell = row.AddCell()
-							cell.SetString(name[:len(name)-4])
-							cell = row.AddCell()
-							cell.SetString(strconv.FormatInt(j.TimeCost, 10))
-						}
+						json_list = append(json_list, obj)
+						//if obj.DataFirst4ByteHex == "98d69d92" {
+						//	row = sheet.AddRow()
+						//	cell = row.AddCell()
+						//	cell.SetString(name[:len(name)-4])
+						//	cell = row.AddCell()
+						//	cell.SetString(strconv.FormatInt(j.TimeCost, 10))
+						//}
 					}
 				}
 
 				if err := scanner.Err(); err != nil {
 					panic(err)
+				}
+
+				for _, newTx := range json_list {
+					if newTx["Type"] == "NewTransaction" {
+						hash := newTx["TransactionHash"]
+						row = sheet.AddRow()
+						cell = row.AddCell()
+						cell.SetString(name[:len(name)-4])
+						cell = row.AddCell()
+						cell.SetString(hash.(string))
+						//find transaction begin
+						var txBegin map[string]interface{}
+						found := false
+						for _, obj2 := range json_list {
+							if obj2["Type"] == "TransactionBegin" {
+								if obj2["TransactionHash"] == hash {
+									//find
+									found = true
+									txBegin = obj2
+								}
+							}
+						}
+						if !found {
+							fmt.Println("Warning: unmatched transaction", hash)
+							continue
+						}
+
+						//find transaction end
+						var txEnd map[string]interface{}
+						found = false
+						for _, obj2 := range json_list {
+							if obj2["Type"] == "TransactionEnd" {
+								if obj2["TransactionHash"] == hash {
+									//find
+									found = true
+									txEnd = obj2
+								}
+							}
+						}
+						if !found {
+							fmt.Println("Warning: unmatched transaction", hash)
+							continue
+						}
+
+						cell = row.AddCell()
+						cell.SetString(fmt.Sprint(txEnd["DataFirst4Byte"]))
+						cell = row.AddCell()
+						cell.SetFloat(txBegin["Timestamp"].(float64))
+						cell = row.AddCell()
+						cell.SetFloat(txEnd["Timestamp"].(float64))
+						cell = row.AddCell()
+						//reserved for formula
+
+						//find blockgen
+						var blockGen map[string]interface{}
+						found = false
+						for _, obj2 := range json_list {
+							if obj2["Type"] == "BlockGen" {
+								for _, obj3 := range obj2["TransactionHashs"].([]interface{}) {
+									if obj3 == hash {
+										found = true
+										blockGen = obj2
+									}
+								}
+							}
+						}
+						cell = row.AddCell()
+						cell.SetString(fmt.Sprint(newTx["Timestamp"]))
+						cell = row.AddCell()
+						cell.SetString(fmt.Sprint(blockGen["Timestamp"]))
+						cell = row.AddCell()
+						cell = row.AddCell()
+						//reserved for formula
+
+						if !found {
+							fmt.Println("Warning: unmatched transaction", hash)
+							continue
+						}
+
+					}
+
 				}
 
 			}
@@ -97,5 +192,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Output at: ",*outputFileName)
+	fmt.Println("Output at: ", *outputFileName)
 }
