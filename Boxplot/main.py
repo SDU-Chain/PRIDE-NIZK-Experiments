@@ -60,15 +60,14 @@ print(boxPlotData)
 
 plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
-
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#9999ff', 'linewidth': 1.5},
-            flierprops={'marker': 'o', 'markerfacecolor': 'red', 'color': 'black', 'linewidth': 1.5},
-            medianprops={'linestyle': '-', 'color': 'blue', 'linewidth': 1.5},
-            whiskerprops={'linewidth': 1.5},
-            capprops={'linewidth': 1.5},
-            labels=sorted(group_verproof_execution_times.keys()))
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
+            whiskerprops={'linewidth': 2},
+            capprops={'linewidth': 2},
+            labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
@@ -90,14 +89,13 @@ print(boxPlotData)
 
 plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
-
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#9999ff', 'linewidth': 1.5},
-            flierprops={'marker': 'o', 'markerfacecolor': 'red', 'color': 'black', 'linewidth': 1.5},
-            medianprops={'linestyle': '-', 'color': 'blue', 'linewidth': 1.5},
-            whiskerprops={'linewidth': 1.5},
-            capprops={'linewidth': 1.5},
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
+            whiskerprops={'linewidth': 2},
+            capprops={'linewidth': 2},
             labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
@@ -120,15 +118,14 @@ print(boxPlotData)
 
 plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
-
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#9999ff', 'linewidth': 1.5},
-            flierprops={'marker': 'o', 'markerfacecolor': 'red', 'color': 'black', 'linewidth': 1.5},
-            medianprops={'linestyle': '-', 'color': 'blue', 'linewidth': 1.5},
-            whiskerprops={'linewidth': 1.5},
-            capprops={'linewidth': 1.5},
-            labels=sorted(group_newsession_execution_times.keys()))
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
+            whiskerprops={'linewidth': 2},
+            capprops={'linewidth': 2},
+            labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
@@ -150,15 +147,14 @@ print(boxPlotData)
 
 plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
-
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#9999ff', 'linewidth': 1.5},
-            flierprops={'marker': 'o', 'markerfacecolor': 'red', 'color': 'black', 'linewidth': 1.5},
-            medianprops={'linestyle': '-', 'color': 'blue', 'linewidth': 1.5},
-            whiskerprops={'linewidth': 1.5},
-            capprops={'linewidth': 1.5},
-            labels=sorted(group_newsession_latency_times.keys()))
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
+            whiskerprops={'linewidth': 2},
+            capprops={'linewidth': 2},
+            labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
