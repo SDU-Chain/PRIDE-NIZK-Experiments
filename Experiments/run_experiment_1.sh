@@ -11,6 +11,10 @@ arr[5]=50000;
 #rand=$[$RANDOM % ${#arr[@]}]
 arr=( $(shuf -e "${arr[@]}") );
 
+echo "You have 10 seconds to record the order of number of commitments!"
+printf '%s\n' "${arr[@]}"
+sleep 10
+
 for i in "${arr[@]}"
 do
 	echo ----$i----;
