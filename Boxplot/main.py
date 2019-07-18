@@ -13,12 +13,14 @@ import matplotlib as mpl
 import pandas as pd
 
 plt.style.use("default")
-plt.rcParams["font.family"] = "Times New Roman"
 
-workbook = xlrd.open_workbook('exp1_1.xlsx')
+plt.rc('text', usetex=True)
+plt.rc('font', family='Times New Roman')
+
+workbook = xlrd.open_workbook('input.xlsx')
 sheet = workbook.sheet_by_name(workbook.sheet_names()[0])
 
-# print(sheet.name, sheet.nrows, sheet.ncols)
+print(sheet.name, sheet.nrows, sheet.ncols)
 row_number_of_commitments = sheet.col_values(0)
 row_data_first_4_bytes = sheet.col_values(2)
 row_transaction_execution_times = sheet.col_values(5)
@@ -63,7 +65,6 @@ for k in sorted(group_verproof_execution_times.keys()):
 
 print(boxPlotData)
 
-
 fig = plt.figure(figsize=(20, 12))
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
@@ -76,7 +77,7 @@ plt.boxplot(x=boxPlotData,
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel('VerProof time (ms)', fontsize=32, color='black', labelpad=20)
+plt.ylabel(r'${\bf VerProof}$ time (ms)', fontsize=32, color='black', labelpad=20)
 plt.xticks(fontsize=32, color='black')
 plt.yticks(fontsize=32, color='black')
 plt.show()
@@ -104,7 +105,7 @@ plt.boxplot(x=boxPlotData,
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel('VerProof latency (ms)', fontsize=32, color='black', labelpad=20)
+plt.ylabel(r'${\bf VerProof}$ time (ms)', fontsize=32, color='black', labelpad=20)
 plt.xticks(fontsize=32, color='black')
 plt.yticks(fontsize=32, color='black')
 plt.show()
