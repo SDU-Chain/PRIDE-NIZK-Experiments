@@ -12,6 +12,7 @@ arr[5]=50000;
 arr=( $(shuf -e "${arr[@]}") );
 
 echo "Append the order of number of commitments to ./output/order.txt"
+echo "Timestamp:"`date +%s`>>./output/order.txt
 printf '%s\n' "${arr[@]}" >> ./output/order.txt
 
 for i in "${arr[@]}"
