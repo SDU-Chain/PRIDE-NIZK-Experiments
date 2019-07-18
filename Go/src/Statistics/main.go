@@ -61,16 +61,16 @@ func main() {
 	cell = row.AddCell()
 	cell.SetString("TransactionEnd")
 	cell = row.AddCell()
+	cell.SetString("TransactionTime")
 	cell = row.AddCell()
 	cell.SetString("NewTransaction")
 	cell = row.AddCell()
 	cell.SetString("BlockGen")
 	cell = row.AddCell()
-
-	var json_list []map[string]interface{}
-	json_list = make([]map[string]interface{}, 0)
+	cell.SetString("TransactionLatency")
 
 	for _, fi := range rd {
+		json_list := make([]map[string]interface{}, 0)
 		name := fi.Name()
 		if len(name) >= 4 {
 			if name[len(name)-4:] == ".txt" {
@@ -154,7 +154,7 @@ func main() {
 						cell = row.AddCell()
 						cell.SetFloat(txEnd["Timestamp"].(float64))
 						cell = row.AddCell()
-						//reserved for formula
+						cell.SetFloat(txEnd["Timestamp"].(float64) - txBegin["Timestamp"].(float64))
 
 						//find blockgen
 						var blockGen map[string]interface{}
@@ -175,7 +175,7 @@ func main() {
 						cell = row.AddCell()
 						cell.SetString(fmt.Sprint(blockGen["Timestamp"]))
 						cell = row.AddCell()
-						cell = row.AddCell()
+						cell.SetFloat(blockGen["Timestamp"].(float64) - newTx["Timestamp"].(float64))
 						//reserved for formula
 
 						if !found {
