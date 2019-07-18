@@ -18,7 +18,7 @@ sleep 10
 for i in "${arr[@]}"
 do
 	echo ----$i----;
-	echo $count | ./run_car_emulator.sh ;
+	echo $i | ./run_car_emulator.sh ;
 	echo ----------;
 done
 
