@@ -1,10 +1,20 @@
 #!/bin/bash
 set -e
-read -p "Number of commitments? " count
-for i in {1..10}
+
+
+arr[0]=1000;
+arr[1]=2000;
+arr[2]=5000;
+arr[3]=10000;
+arr[4]=20000;
+arr[5]=50000;
+#rand=$[$RANDOM % ${#arr[@]}]
+arr=( $(shuf -e "${arr[@]}") );
+
+for i in "${arr[@]}"
 do
-echo ----$i----;
-echo $count | ./run_car_emulator.sh
-echo ----------;
+	echo ----$i----;
+	echo $count | ./run_car_emulator.sh ;
+	echo ----------;
 done
 
