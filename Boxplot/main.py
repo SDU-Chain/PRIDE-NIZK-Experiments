@@ -9,10 +9,15 @@ Created on Fri Mar  1 15:22:13 2019
 import xlrd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import pandas as pd
+
+plt.style.use("default")
+plt.rcParams["font.family"] = "Times New Roman"
 
 workbook = xlrd.open_workbook('exp1_1.xlsx')
 sheet = workbook.sheet_by_name(workbook.sheet_names()[0])
+
 # print(sheet.name, sheet.nrows, sheet.ncols)
 row_number_of_commitments = sheet.col_values(0)
 row_data_first_4_bytes = sheet.col_values(2)
@@ -58,7 +63,7 @@ for k in sorted(group_verproof_execution_times.keys()):
 
 print(boxPlotData)
 
-plt.style.use("ggplot")
+
 fig = plt.figure(figsize=(20, 12))
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
@@ -87,7 +92,6 @@ for k in sorted(group_verproof_latency_times.keys()):
 
 print(boxPlotData)
 
-plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
@@ -116,7 +120,6 @@ for k in sorted(group_newsession_execution_times.keys()):
 
 print(boxPlotData)
 
-plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
@@ -145,7 +148,6 @@ for k in sorted(group_newsession_latency_times.keys()):
 
 print(boxPlotData)
 
-plt.style.use("ggplot")
 fig = plt.figure(figsize=(20, 12))
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
