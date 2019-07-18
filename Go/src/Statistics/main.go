@@ -120,6 +120,7 @@ func main() {
 									//find
 									found = true
 									txBegin = obj2
+									break
 								}
 							}
 						}
@@ -137,6 +138,7 @@ func main() {
 									//find
 									found = true
 									txEnd = obj2
+									break
 								}
 							}
 						}
@@ -163,6 +165,7 @@ func main() {
 									if obj3 == hash {
 										found = true
 										blockGen = obj2
+										break
 									}
 								}
 							}
