@@ -11,8 +11,8 @@ arr[5]=50000;
 #rand=$[$RANDOM % ${#arr[@]}]
 arr=( $(shuf -e "${arr[@]}") );
 
-echo "Write the order of number of commitments to ./output/order.txt"
-printf '%s\n' "${arr[@]}" |tee ./output/order.txt
+echo "Append the order of number of commitments to ./output/order.txt"
+printf '%s\n' "${arr[@]}" >> ./output/order.txt
 
 for i in "${arr[@]}"
 do
