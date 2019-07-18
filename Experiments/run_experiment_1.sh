@@ -11,9 +11,9 @@ arr[5]=50000;
 #rand=$[$RANDOM % ${#arr[@]}]
 arr=( $(shuf -e "${arr[@]}") );
 
-echo "You have 10 seconds to record the order of number of commitments!"
-printf '%s\n' "${arr[@]}"
-sleep 10
+echo "Append the order of number of commitments to ./output/order.txt"
+echo "Timestamp:"`date +%s`>>./output/order.txt
+printf '%s\n' "${arr[@]}" >> ./output/order.txt
 
 for i in "${arr[@]}"
 do
