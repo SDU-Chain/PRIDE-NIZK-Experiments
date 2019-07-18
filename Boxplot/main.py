@@ -77,7 +77,7 @@ plt.boxplot(x=boxPlotData,
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel(r'${\bf VerProof}$ time (ms)', fontsize=32, color='black', labelpad=20)
+plt.ylabel(r'${\bf VerProof}$ (ms)', fontsize=32, color='black', labelpad=20)
 plt.xticks(fontsize=32, color='black')
 plt.yticks(fontsize=32, color='black')
 plt.show()
@@ -105,7 +105,7 @@ plt.boxplot(x=boxPlotData,
 
 # plt.ylim(0, 50)
 plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel(r'${\bf VerProof}$ time (ms)', fontsize=32, color='black', labelpad=20)
+plt.ylabel(r'${\bf ProofLatency}$ (ms)', fontsize=32, color='black', labelpad=20)
 plt.xticks(fontsize=32, color='black')
 plt.yticks(fontsize=32, color='black')
 plt.show()
