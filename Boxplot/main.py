@@ -14,8 +14,10 @@ import pandas as pd
 
 plt.style.use("default")
 
-plt.rc('text', usetex=True)
-plt.rc('font', family='Times New Roman')
+plt.rc('text', usetex=False)
+plt.rc('font', family='serif', serif='Times New Roman')
+plt.rc('mathtext', fontset='cm')
+plt.rc('figure', figsize=(5, 3))
 
 workbook = xlrd.open_workbook('input.xlsx')
 sheet = workbook.sheet_by_name(workbook.sheet_names()[0])
@@ -65,21 +67,21 @@ for k in sorted(group_verproof_execution_times.keys()):
 
 print(boxPlotData)
 
-fig = plt.figure(figsize=(20, 12))
+fig = plt.figure()
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
-            whiskerprops={'linewidth': 2},
-            capprops={'linewidth': 2},
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
+            whiskerprops={'linewidth': 1},
+            capprops={'linewidth': 1},
             labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel(r'${\bf VerProof}$ time (ms)', fontsize=32, color='black', labelpad=20)
-plt.xticks(fontsize=32, color='black')
-plt.yticks(fontsize=32, color='black')
+plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
+plt.ylabel(r'${\bf VerProof}$ (ms)', fontsize=12, color='black', labelpad=20)
+plt.xticks(fontsize=12, color='black')
+plt.yticks(fontsize=12, color='black')
 plt.show()
 fig.savefig("graph-1.pdf", bbox_inches="tight")
 
@@ -93,21 +95,21 @@ for k in sorted(group_verproof_latency_times.keys()):
 
 print(boxPlotData)
 
-fig = plt.figure(figsize=(20, 12))
+fig = plt.figure()
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
-            whiskerprops={'linewidth': 2},
-            capprops={'linewidth': 2},
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
+            whiskerprops={'linewidth': 1},
+            capprops={'linewidth': 1},
             labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel(r'${\bf VerProof}$ time (ms)', fontsize=32, color='black', labelpad=20)
-plt.xticks(fontsize=32, color='black')
-plt.yticks(fontsize=32, color='black')
+plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
+plt.ylabel(r'${\bf ProofLatency}$ (ms)', fontsize=12, color='black', labelpad=20)
+plt.xticks(fontsize=12, color='black')
+plt.yticks(fontsize=12, color='black')
 plt.show()
 fig.savefig("graph-2.pdf", bbox_inches="tight")
 
@@ -121,21 +123,21 @@ for k in sorted(group_newsession_execution_times.keys()):
 
 print(boxPlotData)
 
-fig = plt.figure(figsize=(20, 12))
+fig = plt.figure()
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
-            whiskerprops={'linewidth': 2},
-            capprops={'linewidth': 2},
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
+            whiskerprops={'linewidth': 1},
+            capprops={'linewidth': 1},
             labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel('NewSession time (ms)', fontsize=32, color='black', labelpad=20)
-plt.xticks(fontsize=32, color='black')
-plt.yticks(fontsize=32, color='black')
+plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
+plt.ylabel('NewSession time (ms)', fontsize=12, color='black', labelpad=20)
+plt.xticks(fontsize=12, color='black')
+plt.yticks(fontsize=12, color='black')
 plt.show()
 fig.savefig("graph-3.pdf", bbox_inches="tight")
 
@@ -149,20 +151,20 @@ for k in sorted(group_newsession_latency_times.keys()):
 
 print(boxPlotData)
 
-fig = plt.figure(figsize=(20, 12))
+fig = plt.figure()
 plt.boxplot(x=boxPlotData,
             patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 2},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 2},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 2},
-            whiskerprops={'linewidth': 2},
-            capprops={'linewidth': 2},
+            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
+            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
+            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
+            whiskerprops={'linewidth': 1},
+            capprops={'linewidth': 1},
             labels=sorted(group_verproof_latency_times.keys()))
 
 # plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=32, color='black', labelpad=20)
-plt.ylabel('NewSession latency (ms)', fontsize=32, color='black', labelpad=20)
-plt.xticks(fontsize=32, color='black')
-plt.yticks(fontsize=32, color='black')
+plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
+plt.ylabel('NewSession latency (ms)', fontsize=12, color='black', labelpad=20)
+plt.xticks(fontsize=12, color='black')
+plt.yticks(fontsize=12, color='black')
 plt.show()
 fig.savefig("graph-4.pdf", bbox_inches="tight")
