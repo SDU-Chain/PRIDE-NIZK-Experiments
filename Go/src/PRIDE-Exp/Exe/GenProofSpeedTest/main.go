@@ -73,10 +73,15 @@ func genProof() {
 
 	end := time.Now()
 	duration := end.Sub(start)
-	fmt.Println(proof)
+	
+	dummy(proof)
 	fmt.Println()
 
 	fmt.Println("genproof:", duration.Nanoseconds(), "ns")
+}
+
+func dummy(a interface{}){
+	_ = fmt.Sprint(a)
 }
 
 func commit(v int, a int) {
