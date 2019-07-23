@@ -58,113 +58,56 @@ for i in range(0, len(row_number_of_commitments)):
             group_newsession_execution_times[v] = [int(row_transaction_execution_times[i]) / 1000000]
             group_newsession_latency_times[v] = [(int(row_transaction_latency_times[i]) / 1000000)]
 
-############
 
-boxPlotData = []
-# 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
-for k in sorted(group_verproof_execution_times.keys()):
-    boxPlotData.append(group_verproof_execution_times[k])
+def drawBoxPlot(data_dict, xlabel, ylabel, output_name, yscale='linear'):
+    if len(data_dict.keys()) == 0:
+        return
 
-print(boxPlotData)
+    boxPlotData = []
+    # 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
+    for k in sorted(data_dict.keys()):
+        boxPlotData.append(data_dict[k])
 
-fig = plt.figure()
-plt.boxplot(x=boxPlotData,
-            patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
-            whiskerprops={'linewidth': 1},
-            capprops={'linewidth': 1},
-            labels=sorted(group_verproof_latency_times.keys()))
+    print(boxPlotData)
 
-# plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
-plt.ylabel(r'${\bf VerProof}$ (ms)', fontsize=12, color='black', labelpad=20)
-plt.xticks(fontsize=12, color='black')
-plt.yticks(fontsize=12, color='black')
-plt.show()
-fig.savefig("graph-1.pdf", bbox_inches="tight")
+    fig = plt.figure()
+    plt.boxplot(x=boxPlotData,
+                patch_artist=True,
+                boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
+                flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
+                medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
+                whiskerprops={'linewidth': 1},
+                capprops={'linewidth': 1},
+                labels=sorted(data_dict.keys()))
 
-############
+    # plt.ylim(0, 50)
+    plt.xlabel(xlabel, fontsize=12, color='black', labelpad=20)
+    plt.ylabel(ylabel, fontsize=12, color='black', labelpad=20)
+    plt.xticks(fontsize=12, color='black')
+    plt.yticks(fontsize=12, color='black')
 
-boxPlotData = []
-# 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
-# 所以加个排序保险一点
-for k in sorted(group_verproof_latency_times.keys()):
-    boxPlotData.append(group_verproof_latency_times[k])
+    plt.yscale(yscale)
 
-print(boxPlotData)
+    plt.show()
+    fig.savefig(output_name, bbox_inches="tight")
 
-fig = plt.figure()
-plt.boxplot(x=boxPlotData,
-            patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
-            whiskerprops={'linewidth': 1},
-            capprops={'linewidth': 1},
-            labels=sorted(group_verproof_latency_times.keys()))
 
-# plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
-plt.ylabel(r'${\bf ProofLatency}$ (ms)', fontsize=12, color='black', labelpad=20)
-plt.xticks(fontsize=12, color='black')
-plt.yticks(fontsize=12, color='black')
-plt.show()
-fig.savefig("graph-2.pdf", bbox_inches="tight")
+drawBoxPlot(group_verproof_execution_times,
+            'Number of commitments',
+            r'${\bf VerProof}$ (ms)',
+            "graph-1.pdf", yscale="linear")
 
-############
+drawBoxPlot(group_verproof_latency_times,
+            'Number of commitments',
+            r'${\bf ProofLatency}$ (ms)',
+            "graph-2.pdf", yscale="linear")
 
-boxPlotData = []
-# 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
-# 所以加个排序保险一点
-for k in sorted(group_newsession_execution_times.keys()):
-    boxPlotData.append(group_newsession_execution_times[k])
+drawBoxPlot(group_newsession_execution_times,
+            'Number of commitments',
+            r'NewSession time (ms)',
+            "graph-3.pdf")
 
-print(boxPlotData)
-
-fig = plt.figure()
-plt.boxplot(x=boxPlotData,
-            patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
-            whiskerprops={'linewidth': 1},
-            capprops={'linewidth': 1},
-            labels=sorted(group_verproof_latency_times.keys()))
-
-# plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
-plt.ylabel('NewSession time (ms)', fontsize=12, color='black', labelpad=20)
-plt.xticks(fontsize=12, color='black')
-plt.yticks(fontsize=12, color='black')
-plt.show()
-fig.savefig("graph-3.pdf", bbox_inches="tight")
-
-############
-
-boxPlotData = []
-# 注：group_transaction_execution_times.keys() 出现了两次，要求这两次的返回列表顺序必须相同。不知道是否是未定义行为
-# 所以加个排序保险一点
-for k in sorted(group_newsession_latency_times.keys()):
-    boxPlotData.append(group_newsession_latency_times[k])
-
-print(boxPlotData)
-
-fig = plt.figure()
-plt.boxplot(x=boxPlotData,
-            patch_artist=True,
-            boxprops={'color': 'black', 'facecolor': '#ffffff', 'linewidth': 1},
-            flierprops={'marker': 'o', 'markerfacecolor': '#ffffff', 'color': 'black', 'linewidth': 1},
-            medianprops={'linestyle': '-', 'color': 'black', 'linewidth': 1},
-            whiskerprops={'linewidth': 1},
-            capprops={'linewidth': 1},
-            labels=sorted(group_verproof_latency_times.keys()))
-
-# plt.ylim(0, 50)
-plt.xlabel('Number of commitments', fontsize=12, color='black', labelpad=20)
-plt.ylabel('NewSession latency (ms)', fontsize=12, color='black', labelpad=20)
-plt.xticks(fontsize=12, color='black')
-plt.yticks(fontsize=12, color='black')
-plt.show()
-fig.savefig("graph-4.pdf", bbox_inches="tight")
+drawBoxPlot(group_newsession_latency_times,
+            'Number of commitments',
+            r'NewSession latency (ms)',
+            "graph-4.pdf")
