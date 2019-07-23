@@ -69,6 +69,7 @@ if __name__ == "__main__":
     sheet.write(row_id, 3, '75%')
     sheet.write(row_id, 4, '95%')
     sheet.write(row_id, 5, '99%')
+    sheet.write(row_id, 6, 'average')
 
     for k in sorted(group_verproof_execution_times.keys()):
         df = pd.DataFrame(group_verproof_execution_times[k])
@@ -79,5 +80,6 @@ if __name__ == "__main__":
         sheet.write(row_id, 3, df.quantile(.75)[0])
         sheet.write(row_id, 4, df.quantile(.95)[0])
         sheet.write(row_id, 5, df.quantile(.99)[0])
+        sheet.write(row_id, 6, df.mean()[0])
 
     workbook.close()
