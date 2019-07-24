@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 read -p "Number of cars=? " count
+last_pid=0
 for i in $( seq 1 $count )
 do
-	echo 100 | ./run_car_emulator.sh &
+	while true; do
+		echo 100 | ./run_car_emulator.sh &
+		this_pid=%?
+		if [$this_pid -ne $last_pid]; then
+			last_pid=this_pid
+			break
+		fi
+	done
+
 done
 
 while true; do
