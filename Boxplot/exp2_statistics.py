@@ -50,54 +50,62 @@ if __name__ == "__main__":
     # write Excel
 
     workbook = xlsxwriter.Workbook('output.xlsx')
-    sheet = workbook.add_worksheet('Worksheet')
 
-    row_id = 0
-    col_id = 0
-    sheet.write(row_id, col_id, 'filename')
-    col_id += 1
-    sheet.write(row_id, col_id, '25%')
-    col_id += 1
-    sheet.write(row_id, col_id, '50%')
-    col_id += 1
-    sheet.write(row_id, col_id, '85%')
-    col_id += 1
-    sheet.write(row_id, col_id, '86%')
-    col_id += 1
-    sheet.write(row_id, col_id, '87%')
-    col_id += 1
-    sheet.write(row_id, col_id, '88%')
-    col_id += 1
-    sheet.write(row_id, col_id, '89%')
-    col_id += 1
-    sheet.write(row_id, col_id, '90%')
-    col_id += 1
-    sheet.write(row_id, col_id, 'average')
-    col_id += 1
 
-    for k in sorted(group_verproof_execution_times.keys()):
-        df = pd.DataFrame(group_verproof_execution_times[k])
-        row_id += 1
+    def analyze(dict_list, title):
+        sheet = workbook.add_worksheet(title)
+
+        row_id = 0
         col_id = 0
-        sheet.write(row_id, col_id, k)
+
+        sheet.write(row_id, col_id, 'filename')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.25)[0])
+        sheet.write(row_id, col_id, '25%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.50)[0])
+        sheet.write(row_id, col_id, '50%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.85)[0])
+        sheet.write(row_id, col_id, '85%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.86)[0])
+        sheet.write(row_id, col_id, '86%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.87)[0])
+        sheet.write(row_id, col_id, '87%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.88)[0])
+        sheet.write(row_id, col_id, '88%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.89)[0])
+        sheet.write(row_id, col_id, '89%')
         col_id += 1
-        sheet.write(row_id, col_id, df.quantile(.90)[0])
+        sheet.write(row_id, col_id, '90%')
         col_id += 1
-        sheet.write(row_id, col_id, df.mean()[0])
+        sheet.write(row_id, col_id, 'average')
         col_id += 1
+
+        for k in sorted(dict_list.keys()):
+            df = pd.DataFrame(dict_list[k])
+            row_id += 1
+            col_id = 0
+            sheet.write(row_id, col_id, k)
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.25)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.50)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.85)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.86)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.87)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.88)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.89)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.quantile(.90)[0])
+            col_id += 1
+            sheet.write(row_id, col_id, df.mean()[0])
+            col_id += 1
+
+
+    analyze(group_verproof_execution_times, 'verproof')
+    analyze(group_verproof_latency_times, 'prooflatency')
 
     workbook.close()
