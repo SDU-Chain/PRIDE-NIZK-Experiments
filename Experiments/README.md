@@ -83,6 +83,10 @@ echo foobar | ./run_server_geth_and_cloud.sh
 
   Start the HTTP server powered by Python 3. The HTTP server provide information about the sealer node for the cars.
 
+```bash
+./run_http_server.sh
+```
+
 ## Step 5: [Client side] Get information from the HTTP server
 
   Edit these two files:
@@ -141,5 +145,13 @@ To make this option persists after reboot, edit `/etc/sysctl.conf` by adding the
 
 ```ini
 kernel.pid_max = 4194304
+```
+
+## Step 9: [Both sides] Stop the nodes
+
+The following command stop the ethereum client **safely**. It sends the `Ctrl+C` signal to the process, instead of just killing them.
+
+```bash
+./kill_geth_and_cloud.sh
 ```
 
