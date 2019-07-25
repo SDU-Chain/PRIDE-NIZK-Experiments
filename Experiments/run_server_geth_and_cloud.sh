@@ -13,7 +13,7 @@ read -p "Output filename=?" filename
 
 # run server at background
 screen -Sdm pride_exp_cloud ./bin/cloudProvider -port 12345
-screen -Sdm pride_exp_geth ./bin/geth-timing --timing.output=./output/$filename.txt --datadir ./gethdata --syncmode 'full' --port 30310 --networkid 1114 --targetgaslimit 75200240 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,db,eth,net,web3,miner,personal" --mine --minerthreads 1 --unlock $account --password ./password/password.txt
+screen -Sdm pride_exp_geth ./bin/geth-timing --timing.output=./output/$filename.txt --datadir ./gethdata --syncmode 'full' --port 30310 --networkid 1114 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,db,eth,net,web3,miner,personal" --mine --minerthreads 1 --unlock $account --password ./password/password.txt
 
 # update enode
 echo "Sleep 5s..."
