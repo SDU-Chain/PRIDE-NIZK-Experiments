@@ -47,10 +47,11 @@ def drawBoxPlot(data_dict, xlabel, ylabel, output_name, yscale='linear'):
 
 
 if __name__ == "__main__":
+	
 
     plt.style.use("default")
 
-    plt.rc('text', usetex=False)
+    plt.rc('text', usetex=True)
     plt.rc('font', family='serif', serif='Times New Roman')
     plt.rc('mathtext', fontset='cm')
     plt.rc('figure', figsize=(5, 3))
