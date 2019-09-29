@@ -65,7 +65,7 @@ func main() {
 	cell = row.AddCell()
 	cell.SetString("NewTransaction")
 	cell = row.AddCell()
-	cell.SetString("BlockGen")
+	cell.SetString("BlockSeal")
 	cell = row.AddCell()
 	cell.SetString("TransactionLatency")
 
@@ -156,15 +156,15 @@ func main() {
 						cell = row.AddCell()
 						cell.SetFloat(txEnd["Timestamp"].(float64) - txBegin["Timestamp"].(float64))
 
-						//find blockgen
-						var blockGen map[string]interface{}
+						//find BlockSeal
+						var BlockSeal map[string]interface{}
 						found = false
 						for _, obj2 := range json_list {
-							if obj2["Type"] == "BlockGen" {
+							if obj2["Type"] == "BlockSeal" {
 								for _, obj3 := range obj2["TransactionHashs"].([]interface{}) {
 									if obj3 == hash {
 										found = true
-										blockGen = obj2
+										BlockSeal = obj2
 										break
 									}
 								}
@@ -173,9 +173,9 @@ func main() {
 						cell = row.AddCell()
 						cell.SetString(fmt.Sprint(newTx["Timestamp"]))
 						cell = row.AddCell()
-						cell.SetString(fmt.Sprint(blockGen["Timestamp"]))
+						cell.SetString(fmt.Sprint(BlockSeal["Timestamp"]))
 						cell = row.AddCell()
-						cell.SetFloat(blockGen["Timestamp"].(float64) - newTx["Timestamp"].(float64))
+						cell.SetFloat(BlockSeal["Timestamp"].(float64) - newTx["Timestamp"].(float64))
 						//reserved for formula
 
 						if !found {
