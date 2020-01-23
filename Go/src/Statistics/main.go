@@ -170,6 +170,11 @@ func main() {
 								}
 							}
 						}
+						if !found {
+							fmt.Println("Warning: unmatched transaction", hash)
+							continue
+						}
+						
 						cell = row.AddCell()
 						cell.SetString(fmt.Sprint(newTx["Timestamp"]))
 						cell = row.AddCell()
@@ -178,10 +183,6 @@ func main() {
 						cell.SetFloat(BlockSeal["Timestamp"].(float64) - newTx["Timestamp"].(float64))
 						//reserved for formula
 
-						if !found {
-							fmt.Println("Warning: unmatched transaction", hash)
-							continue
-						}
 
 					}
 
