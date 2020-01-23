@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
-echo 0 | ./set_geth_account.sh
+
+#echo 0 | ./set_geth_account.sh
+
 ./init_geth.sh
 echo deleteme | ./run_server_geth_and_cloud.sh
 ./deploy_contract.sh
