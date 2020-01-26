@@ -156,6 +156,9 @@ func main() {
 						cell = row.AddCell()
 						cell.SetFloat(txEnd["Timestamp"].(float64) - txBegin["Timestamp"].(float64))
 
+						cell = row.AddCell()
+						cell.SetString(fmt.Sprint(newTx["Timestamp"]))
+						
 						//find BlockSeal
 						var BlockSeal map[string]interface{}
 						found = false
@@ -176,13 +179,9 @@ func main() {
 						}
 						
 						cell = row.AddCell()
-						cell.SetString(fmt.Sprint(newTx["Timestamp"]))
-						cell = row.AddCell()
 						cell.SetString(fmt.Sprint(BlockSeal["Timestamp"]))
 						cell = row.AddCell()
 						cell.SetFloat(BlockSeal["Timestamp"].(float64) - newTx["Timestamp"].(float64))
-						//reserved for formula
-
 
 					}
 
