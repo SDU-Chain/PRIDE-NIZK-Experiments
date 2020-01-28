@@ -52,17 +52,11 @@ echo 1000 | ./make_accounts.sh
 ./make_genesis.py
 ```
 
-## Step 3: [Server side] Initialize the blockchain and deploy the smart contract
+## Step 3: [Server side] Initialize the blockchain
   Set the account to the server account.
 
 ```bash
 echo 0 | ./set_geth_account.sh
-```
-
-  Note that the following script is written ONLY for truffle 5.0 and is not promised to be working in the future. If the script is not working, it's advised to write a program that send the RPC message `eth_sendTransaction` to deploy the contract as well as get the corresponding address, which should be write to `./config/contract`.
-
-```bash
-./init_server_geth_and_deploy_contract.sh
 ```
 
 ## Step 4: [Server side] Start the sealer node and the cloud provider
@@ -99,12 +93,13 @@ echo foobar | ./run_server_geth_and_cloud.sh
 ./download_config_from_http_server.sh
   ```
 
-  Select which car account to use. The first one, for example.
-  ```bash
-echo 1 | ./set_geth_account.sh
-  ```
 
 ## Step 6: [Client side] Start the node
+
+  Select which car account to use. The first one, for example.
+```bash
+echo 1 | ./set_geth_account.sh
+```
 
   Start the node.
 
@@ -118,7 +113,16 @@ echo 1 | ./set_geth_account.sh
 ./get_geth_nodelist.sh
 ```
 
-## Step 7: [Client side] Start a car
+## Step 7: [Server side] Deploy the smart contract
+
+  Note that the following script is written ONLY for truffle 5.0 and is not promised to be working in the future. If the script is not working, it's advised to write a program that send the RPC message `eth_sendTransaction` to deploy the contract as well as get the corresponding address, which should be write to `./config/contract`.
+
+```bash
+./deploy_contract.sh
+```
+
+
+## Step 8: [Client side] Start a car
 
 The car generates 1000 commitments and upload the proof.
 
@@ -127,7 +131,7 @@ The car generates 1000 commitments and upload the proof.
 echo 1000 | ./run_car_emulator.sh
 ```
 
-## Step 8: [Client side] kernel.pid_max
+## Step 9: [Client side] kernel.pid_max
 
 Linux kernel has a limitation on maximum number of process in order to prevent fork bombs.
 
@@ -147,7 +151,7 @@ To make this option persists after reboot, edit `/etc/sysctl.conf` by adding the
 kernel.pid_max = 4194304
 ```
 
-## Step 9: [Both sides] Stop the nodes
+## Step 10: [Both sides] Stop the nodes
 
 The following command stop the ethereum client **safely**. It sends the `Ctrl+C` signal to the process, instead of just killing them.
 
