@@ -139,17 +139,30 @@ For experiment 2, the client might start a huge number of cars, in which case it
 
 Make sure the Linux kernel is running on 64-bit mode. The value must be a power of 2, e.g. 32768. The maximum value is $2^{22}=4194304$ for a 64-bit kernel.
 
-The following command should be run by root.
+To avoid some strange behaviors, the following commands and experiment 2 should be run by root, instead of `sudo`. Use `sudo -s` command to switch to root account.
 
 ```bash
 echo 4194304 > /proc/sys/kernel/pid_max
+ulimit -u 4194304
+ulimit -n 1027204
 ```
 
-To make this option persists after reboot, edit `/etc/sysctl.conf` by adding the following line:
+To make these option persists after reboot, edit `/etc/sysctl.conf` by adding the following line:
 
 ```ini
 kernel.pid_max = 4194304
 ```
+
+and `/etc/security/limits.conf` file by adding the following line:
+
+```
+* soft nproc 4194304
+* hard nproc 4194304
+* soft nofile 1027204
+* hard nofile 1027204
+```
+
+Be sure to check all files at `/etc/sysctl.d/` and `/etc/security/limits.d/` in case your configuration be overridden.
 
 ## Step 10: [Both sides] Stop the nodes
 
