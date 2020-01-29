@@ -137,7 +137,7 @@ Linux kernel has a limitation on maximum number of process in order to prevent f
 
 For experiment 2, the client might start a huge number of cars, in which case it will reach the limitation.
 
-Make sure the Linux kernel is running on 64-bit mode. The value must be a power of 2, e.g. 32768. The maximum value is $2^{22}=4194304$ for a 64-bit kernel.
+Make sure the Linux kernel is running on 64-bit mode. The value must be a power of 2, e.g. 32768. The maximum value is 4194304 for a 64-bit kernel.
 
 To avoid some strange behaviors, the following commands and experiment 2 should be run by root, instead of `sudo`. Use `sudo -s` command to switch to root account.
 
