@@ -5,6 +5,7 @@ import (
 	"PRIDE-Exp/Constant"
 	"PRIDE-Exp/Util"
 	"context"
+	"crypto/rand"
 	"encoding/hex"
 	"errors"
 	"flag"
@@ -14,7 +15,6 @@ import (
 	ethereumRpc "geth-timing/rpc"
 	"log"
 	"math/big"
-	mathRand "math/rand"
 	"net/rpc"
 	"net/rpc/jsonrpc"
 	"strconv"
@@ -48,10 +48,10 @@ func main() {
 	ContractAddress = *contractAddress
 	ContractAccountIndex = *contractAccountIndex
 
-	//初始化随机数种子
-	mathRand.Seed(time.Now().Unix())
-
-	initializeRandomCarID()
+	err = initializeRandomCarID()
+	if err != nil {
+		log.Panic(err)
+	}
 
 	err = connectToCloud()
 	if err != nil {
@@ -99,8 +99,20 @@ func main() {
 		}
 	}
 	for i := 1; i <= *loopCount; i++ {
-		v := mathRand.Intn(Constant.HIGH_V + 1)
-		a := mathRand.Intn(Constant.HIGH_A+1) - Constant.HIGH_A/2
+		max_v := new(big.Int).SetInt64(int64(Constant.HIGH_V + 1))
+		big_v, err := rand.Int(rand.Reader, max_v)
+		if err != nil {
+			log.Panic(err)
+		}
+		v := int(big_v.Int64())
+
+		max_a := new(big.Int).SetInt64(int64(Constant.HIGH_A + 1))
+		big_a, err := rand.Int(rand.Reader, max_a)
+		if err != nil {
+			log.Panic(err)
+		}
+		a := int(big_a.Int64()) - Constant.HIGH_A/2
+
 		err = commit(v, a)
 		if err != nil {
 			log.Panic(err)
@@ -180,8 +192,14 @@ func connectToEthereum() (err error) {
 	return err
 }
 
-func initializeRandomCarID() {
-	CarID = mathRand.Uint64()
+func initializeRandomCarID() (err error) {
+	max_v := new(big.Int).SetUint64(^uint64(0))
+	big_v, err := rand.Int(rand.Reader, max_v)
+	if err != nil {
+		return err
+	}
+	CarID = big_v.Uint64()
+	return nil
 }
 
 func ethereumNewSession() (hashHex string, err error) {
@@ -322,7 +340,12 @@ func rpcSign(carID uint64, piV bn256.G1, piA bn256.G1) (signature string, err er
 }
 
 func ethereumProof(cloudSignature string) (hashHex string, err error) {
-	var r int64 = int64(mathRand.Int31())
+	max_v := new(big.Int).SetUint64(uint64(^uint32(0)))
+	big_v, err := rand.Int(rand.Reader, max_v)
+	if err != nil {
+		return "", err
+	}
+	var r int64 = big_v.Int64()
 
 	vGamma := Util.NewG1IdenticalElement()
 	vGamma.ScalarMult(&Config.G[0], big.NewInt(r))
