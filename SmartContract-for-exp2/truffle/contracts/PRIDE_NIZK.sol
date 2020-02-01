@@ -145,6 +145,7 @@ contract PRIDE_NIZK {
         //Commitment[] commitments;
         bool started;
         bool verified;
+        uint count;
     }
 
     mapping(address => Session) carSessions;
@@ -306,7 +307,7 @@ contract PRIDE_NIZK {
         //accept
         carSessions[msg.sender].verified=true;
         carSessions[msg.sender].started=false;
-        
+        carSessions[msg.sender].count++;
         return true;
     }
     
