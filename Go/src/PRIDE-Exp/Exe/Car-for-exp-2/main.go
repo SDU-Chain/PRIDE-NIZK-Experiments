@@ -5,6 +5,7 @@ import (
 	"PRIDE-Exp/Constant"
 	"PRIDE-Exp/Util"
 	"context"
+	"crypto/rand"
 	"encoding/hex"
 	"errors"
 	"flag"
@@ -14,9 +15,7 @@ import (
 	ethereumRpc "geth-timing/rpc"
 	"log"
 	"math/big"
-	mathRand "math/rand"
 	"net/rpc"
-	"net/rpc/jsonrpc"
 	"strconv"
 	"strings"
 	"time"
@@ -26,7 +25,6 @@ func main() {
 	var err error
 
 	//读取设置
-	cloudProviderHost := flag.String("cloud", "localhost:12345", "The cloud server in the form of \"hostname:port\"")
 	ethereumHost := flag.String("ethereum", "http://localhost:8545", "The ethereum client's rpc url.")
 	contractAddress := flag.String("contract", "", "The address of smart contract PRIDE-NIZK. A hex string begin with 0x. (required)")
 	contractAccountIndex := flag.Int("account", 0, "The index of eth.accounts[]. 0 is the first account. (default 0)")
@@ -34,7 +32,7 @@ func main() {
 
 	flag.Parse()
 
-	if *cloudProviderHost == "" ||
+	if false ||
 		*ethereumHost == "" ||
 		*contractAddress == "" ||
 		*contractAccountIndex < 0 ||
@@ -43,86 +41,98 @@ func main() {
 		return
 	}
 
-	CloudProviderHost = *cloudProviderHost
 	EthereumHost = *ethereumHost
 	ContractAddress = *contractAddress
 	ContractAccountIndex = *contractAccountIndex
 
-	//初始化随机数种子
-	mathRand.Seed(time.Now().Unix())
-
-	initializeRandomCarID()
-
-//	err = connectToCloud()
-//	if err != nil {
-//		log.Panic(err)
-//	}
-
-	err = connectToEthereum()
-	if err != nil {
-		log.Panic(err)
+	for {
+		err = initializeRandomCarID()
+		if err != nil {
+			log.Println("[ERR]", err.Error())
+			continue
+		}
+		break
 	}
 
-	EthereumAccounts, err = ethereumEthAccounts()
-	if err != nil {
-		log.Panic(err)
+	for {
+		err = connectToEthereum()
+		if err != nil {
+			log.Println("[ERR]", err.Error())
+			continue
+		}
+		break
+	}
+
+	for {
+		EthereumAccounts, err = ethereumEthAccounts()
+		if err != nil {
+			log.Println("[ERR]", err.Error())
+			continue
+		}
+		break
 	}
 	EthereumAccount = EthereumAccounts[ContractAccountIndex]
 	log.Println("Use account", EthereumAccount)
 
-	GasLimit, err = ethereumLatestGasLimit()
-	if err != nil {
-		log.Panic(err)
+	for {
+		GasLimit, err = ethereumLatestGasLimit()
+		if err != nil {
+			log.Println("[ERR]", err.Error())
+			continue
+		}
+		break
 	}
 	log.Println("Gas limit is", GasLimit)
 
-//	err = rpcNewSession(CarID)
-//	if err != nil {
-//		log.Panic(err)
-//	}
-//	{
-//		transactionHash, err := ethereumNewSession()
-//		if err != nil {
-//			log.Panic(err)
-//		}
-
-//		//等 Transaction 写入区块
-//		succeed := false
-//		succeed, err = ethereumGetTransactionReceiptLoop(transactionHash)
-//		if err != nil {
-//			log.Panic(err)
-//		}
-//		if !succeed {
-//			log.Panic("Transaction confirmed. Execution failed.")
-//		} else {
-//			log.Println("Transaction confirmed. Execution succeed.")
-//		}
-//	}
 	for i := 1; i <= *loopCount; i++ {
-		v := mathRand.Intn(Constant.HIGH_V + 1)
-		a := mathRand.Intn(Constant.HIGH_A+1) - Constant.HIGH_A/2
-		err = commit(v, a)
-		if err != nil {
-			log.Panic(err)
+		for {
+			max_v := new(big.Int).SetInt64(int64(Constant.HIGH_V + 1))
+			big_v, err := rand.Int(rand.Reader, max_v)
+			if err != nil {
+				log.Println("[ERR]", err.Error())
+				continue
+			}
+			v := int(big_v.Int64())
+
+			max_a := new(big.Int).SetInt64(int64(Constant.HIGH_A + 1))
+			big_a, err := rand.Int(rand.Reader, max_a)
+			if err != nil {
+				log.Println("[ERR]", err.Error())
+				continue
+			}
+			a := int(big_a.Int64()) - Constant.HIGH_A/2
+
+			err = commit(v, a)
+			if err != nil {
+				log.Println("[ERR]", err.Error())
+				continue
+			}
+			break
 		}
+
 	}
 
-//	signature, err := rpcSign(CarID, PiV, PiA)
-//	if err != nil {
-//		log.Panic(err)
-//	}
-
-	//log.Println("Cloud signature: " + signature)
 	for {
-		transactionHash, err := ethereumProof("")
-		if err != nil {
-			log.Panic(err)
+		var transactionHash string
+		for {
+			transactionHash, err = ethereumProof("")
+			if err != nil {
+				log.Println("[ERR]", err.Error())
+				continue
+			}
+			break
 		}
 		//等 Transaction 写入区块
-		succeed, err := ethereumGetTransactionReceiptLoop(transactionHash)
-		if err != nil {
-			log.Panic(err)
+		var succeed bool = false
+		for {
+			succeed, err = ethereumGetTransactionReceiptLoop(transactionHash)
+			if err != nil {
+				log.Println("[ERR]", err.Error())
+				continue
+			}
+			break
 		}
+
 		if !succeed {
 			log.Println("Transaction confirmed. Execution failed.")
 		} else {
@@ -132,13 +142,6 @@ func main() {
 	}
 
 }
-
-//CloudProvider 的 JsonRPC (over TCP) 服务器。以地址:端口的形式给出。
-//
-//例如：
-//  127.0.0.1:12345
-//  [::1]:12345
-var CloudProviderHost string
 
 // 以太坊客户端的 JsonRPC (over HTTP) 服务器。以 URL 的形式给出。
 //
@@ -165,14 +168,6 @@ var EthereumAccount string
 //从以太坊客户端中获得的账户地址
 var EthereumAccounts []string
 
-func connectToCloud() (err error) {
-	RpcClient, err = jsonrpc.Dial("tcp", CloudProviderHost)
-	if err == nil {
-		log.Println("Connected to server " + CloudProviderHost)
-	}
-	return err
-}
-
 func connectToEthereum() (err error) {
 	EthereumClient, err = ethereumRpc.Dial(EthereumHost)
 	if err == nil {
@@ -181,8 +176,14 @@ func connectToEthereum() (err error) {
 	return err
 }
 
-func initializeRandomCarID() {
-	CarID = mathRand.Uint64()
+func initializeRandomCarID() (err error) {
+	max_v := new(big.Int).SetUint64(^uint64(0))
+	big_v, err := rand.Int(rand.Reader, max_v)
+	if err != nil {
+		return err
+	}
+	CarID = big_v.Uint64()
+	return nil
 }
 
 func ethereumNewSession() (hashHex string, err error) {
@@ -202,7 +203,7 @@ func ethereumNewSession() (hashHex string, err error) {
 }
 
 func commit(v int, a int) error {
-//	log.Println("[Commit] v=", v, "a=", a)
+	//	log.Println("[Commit] v=", v, "a=", a)
 	Timestamp++
 
 	vectorV := Util.IntToVectorV(v)
@@ -221,7 +222,7 @@ func commit(v int, a int) error {
 	PiA.Add(&PiA, &tildeA)
 
 	return nil
-//	return rpcCommit(tildeV, tildeA, Timestamp, CarID)
+	//	return rpcCommit(tildeV, tildeA, Timestamp, CarID)
 }
 
 var CarID uint64 = 0
@@ -282,7 +283,7 @@ func rpcCallTwice(serviceMethod string, args interface{}, reply interface{}) err
 func rpcCallOnce(serviceMethod string, args interface{}, reply interface{}) error {
 	err := RpcClient.Call(serviceMethod, args, reply)
 	if err == nil {
-//		log.Println("[RPC] \"" + serviceMethod + "\" sent.")
+		//		log.Println("[RPC] \"" + serviceMethod + "\" sent.")
 	} else {
 		log.Println("[RPC] \"" + serviceMethod + "\" sent but failed.")
 	}
@@ -324,7 +325,12 @@ func rpcSign(carID uint64, piV bn256.G1, piA bn256.G1) (signature string, err er
 }
 
 func ethereumProof(cloudSignature string) (hashHex string, err error) {
-	var r int64 = int64(mathRand.Int31())
+	max_v := new(big.Int).SetUint64(uint64(^uint32(0)))
+	big_v, err := rand.Int(rand.Reader, max_v)
+	if err != nil {
+		return "", err
+	}
+	var r int64 = big_v.Int64()
 
 	vGamma := Util.NewG1IdenticalElement()
 	vGamma.ScalarMult(&Config.G[0], big.NewInt(r))
