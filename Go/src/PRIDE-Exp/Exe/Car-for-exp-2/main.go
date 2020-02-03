@@ -33,7 +33,7 @@ func main() {
 
 	flag.Parse()
 
-	if (*cloudProviderHost == "" || true) ||
+	if (*cloudProviderHost == "" && false) ||
 		*ethereumHost == "" ||
 		*contractAddress == "" ||
 		*contractAccountIndex < 0 ||
