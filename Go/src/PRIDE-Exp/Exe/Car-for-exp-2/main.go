@@ -25,6 +25,7 @@ func main() {
 	var err error
 
 	//读取设置
+	cloudProviderHost := flag.String("cloud", "localhost:12345", "The cloud server in the form of \"hostname:port\"")
 	ethereumHost := flag.String("ethereum", "http://localhost:8545", "The ethereum client's rpc url.")
 	contractAddress := flag.String("contract", "", "The address of smart contract PRIDE-NIZK. A hex string begin with 0x. (required)")
 	contractAccountIndex := flag.Int("account", 0, "The index of eth.accounts[]. 0 is the first account. (default 0)")
@@ -32,7 +33,7 @@ func main() {
 
 	flag.Parse()
 
-	if false ||
+	if (*cloudProviderHost == "" || true) ||
 		*ethereumHost == "" ||
 		*contractAddress == "" ||
 		*contractAccountIndex < 0 ||
@@ -49,6 +50,7 @@ func main() {
 		err = initializeRandomCarID()
 		if err != nil {
 			log.Println("[ERR]", err.Error())
+			time.Sleep(time.Duration(1) * time.Second)
 			continue
 		}
 		break
@@ -58,6 +60,7 @@ func main() {
 		err = connectToEthereum()
 		if err != nil {
 			log.Println("[ERR]", err.Error())
+			time.Sleep(time.Duration(1) * time.Second)
 			continue
 		}
 		break
@@ -67,6 +70,7 @@ func main() {
 		EthereumAccounts, err = ethereumEthAccounts()
 		if err != nil {
 			log.Println("[ERR]", err.Error())
+			time.Sleep(time.Duration(1) * time.Second)
 			continue
 		}
 		break
@@ -78,6 +82,7 @@ func main() {
 		GasLimit, err = ethereumLatestGasLimit()
 		if err != nil {
 			log.Println("[ERR]", err.Error())
+			time.Sleep(time.Duration(1) * time.Second)
 			continue
 		}
 		break
@@ -90,6 +95,7 @@ func main() {
 			big_v, err := rand.Int(rand.Reader, max_v)
 			if err != nil {
 				log.Println("[ERR]", err.Error())
+				time.Sleep(time.Duration(1) * time.Second)
 				continue
 			}
 			v := int(big_v.Int64())
@@ -98,6 +104,7 @@ func main() {
 			big_a, err := rand.Int(rand.Reader, max_a)
 			if err != nil {
 				log.Println("[ERR]", err.Error())
+				time.Sleep(time.Duration(1) * time.Second)
 				continue
 			}
 			a := int(big_a.Int64()) - Constant.HIGH_A/2
@@ -105,6 +112,7 @@ func main() {
 			err = commit(v, a)
 			if err != nil {
 				log.Println("[ERR]", err.Error())
+				time.Sleep(time.Duration(1) * time.Second)
 				continue
 			}
 			break
@@ -118,6 +126,7 @@ func main() {
 			transactionHash, err = ethereumProof("")
 			if err != nil {
 				log.Println("[ERR]", err.Error())
+				time.Sleep(time.Duration(1) * time.Second)
 				continue
 			}
 			break
@@ -128,6 +137,7 @@ func main() {
 			succeed, err = ethereumGetTransactionReceiptLoop(transactionHash)
 			if err != nil {
 				log.Println("[ERR]", err.Error())
+				time.Sleep(time.Duration(1) * time.Second)
 				continue
 			}
 			break
