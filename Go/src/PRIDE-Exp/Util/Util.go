@@ -64,10 +64,14 @@ func G1ToStringXY(p bn256.G1) (ret [2]string) {
 
 //返回 bn256.G1 的单位元
 func NewG1IdenticalElement() bn256.G1 {
-	//注意，为了规避 bn256 库的一个 bug（大概是 bug，已经提交 PR，等开发者回复），
-	//需要让这个点自己加自己一次。反正是零元（单位元），不影响结果。
+	// https://github.com/golang/crypto/pull/75
+
 	ret := bn256.G1{}
-	ret.Add(&ret, &ret)
+	_, err := ret.Unmarshal(make([]byte, 64))
+	if err != nil {
+		panic(err)
+	}
+
 	return ret
 }
 
