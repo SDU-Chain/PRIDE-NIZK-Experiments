@@ -5,6 +5,8 @@
 bash python3 screen curl wget go gcc make truffle tar
 ```
 
+  Note that this experiment is done in 2019. Go 1.14 is not supported. You may choose the go toolchain that comes with Ubuntu 18.04.
+
   For example, on Ubuntu 18.04, you may install missing packages through apt-get.
 
 ```bash
