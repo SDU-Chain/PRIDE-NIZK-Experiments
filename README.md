@@ -3,7 +3,7 @@
 ## Notice
 This experiment is done in 2019. `Go 1.13` should be used, instead of a higher version of Go.
 
-## Experiment Procedure 
+## Experiment Steps 
 
 [Experiments](https://github.com/SadPencil/PRIDE-NIZK-Experiments/tree/master/Experiments)
 
