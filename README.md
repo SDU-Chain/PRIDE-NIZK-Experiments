@@ -2,6 +2,9 @@
 
 [Experiments](https://github.com/SadPencil/PRIDE-NIZK-Experiments/tree/master/Experiments)
 
+## Notice
+This experiment is done in 2019. `Go 1.13` should be used, instead of a higher version of Go.
+
 ## Copyright
 Copyright © 2018-2019 Sad Pencil &lt;me@pencil.live&gt;
 
