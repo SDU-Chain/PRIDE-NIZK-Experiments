@@ -1,7 +1,7 @@
 # Experiments of PRIDE-NIZK
 
-## Notice
-This experiment is done in 2019. `Go 1.13` should be used, instead of a higher version of Go.
+## Important Notice
+This experiment is done in 2019. `Go 1.14` is not supported. You may choose the go toolchain that comes with Ubuntu 18.04.
 
 ## Experiment Steps 
 
